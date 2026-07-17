@@ -216,7 +216,6 @@ python = "3.13.*"
 # 3.14 is outside the supported range and many GIS deps (gdal, pyproj, ...) have
 # no 3.14 wheels yet, forcing source builds. py311/py312/py313 override this.
 python = ">=3.11,<3.14"
-gdal = ">=3.13.0,<4"
 # Conda-forge's geopandas-base no longer pulls in a vector-IO backend.
 # pyogrio is required for GeoDataFrame.to_file / read_file.
 pyogrio = ">=0.12.1"
