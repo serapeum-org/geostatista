@@ -1,72 +1,69 @@
+[![Documentation](https://img.shields.io/badge/Documentation-blue?logo=github&logoColor=white)](https://serapeum-org.github.io/geostatista/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/geostatista.png)](https://img.shields.io/pypi/pyversions/geostatista)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/MAfarrag/geostatista.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MAfarrag/geostatista/context:python)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/MAfarrag/geostatista.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MAfarrag/geostatista/alerts/)
-
-
-[![codecov](https://codecov.io/gh/Serapieum-of-alex/geostatista/branch/main/graph/badge.svg?token=AVZ1XGTdQ2)](https://codecov.io/gh/Serapieum-of-alex/geostatista)
-![GitHub last commit](https://img.shields.io/github/last-commit/MAfarrag/geostatista)
-![GitHub forks](https://img.shields.io/github/forks/MAfarrag/geostatista?style=social)
-![GitHub Repo stars](https://img.shields.io/github/stars/MAfarrag/geostatista?style=social)
-
+[![PyPI version](https://badge.fury.io/py/geostatista.svg)](https://badge.fury.io/py/geostatista)
+[![codecov](https://codecov.io/gh/serapeum-org/geostatista/branch/main/graph/badge.svg)](https://codecov.io/gh/serapeum-org/geostatista)
 
 Current release info
 ====================
 
-| Name | Downloads                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Version | Platforms |
-| --- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| --- | --- |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-geostatista-green.svg)](https://anaconda.org/conda-forge/geostatista) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/geostatista.svg)](https://anaconda.org/conda-forge/geostatista) [![Downloads](https://pepy.tech/badge/geostatista)](https://pepy.tech/project/geostatista) [![Downloads](https://pepy.tech/badge/geostatista/month)](https://pepy.tech/project/geostatista)  [![Downloads](https://pepy.tech/badge/geostatista/week)](https://pepy.tech/project/geostatista)  ![PyPI - Downloads](https://img.shields.io/pypi/dd/geostatista?color=blue&style=flat-square) ![GitHub all releases](https://img.shields.io/github/downloads/MAfarrag/geostatista/total) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/geostatista.svg)](https://anaconda.org/conda-forge/geostatista) [![PyPI version](https://badge.fury.io/py/geostatista.svg)](https://badge.fury.io/py/geostatista) [![Anaconda-Server Badge](https://anaconda.org/conda-forge/geostatista/badges/version.svg)](https://anaconda.org/conda-forge/geostatista) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/geostatista.svg)](https://anaconda.org/conda-forge/geostatista) [![Join the chat at https://gitter.im/Hapi-Nile/Hapi](https://badges.gitter.im/Hapi-Nile/Hapi.svg)](https://gitter.im/Hapi-Nile/Hapi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-geostatista-green.svg)](https://anaconda.org/conda-forge/geostatista) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/geostatista.svg)](https://anaconda.org/conda-forge/geostatista) [![Downloads](https://pepy.tech/badge/geostatista)](https://pepy.tech/project/geostatista) ![PyPI - Downloads](https://img.shields.io/pypi/dd/geostatista?color=blue&style=flat-square) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/geostatista.svg)](https://anaconda.org/conda-forge/geostatista) [![PyPI version](https://badge.fury.io/py/geostatista.svg)](https://badge.fury.io/py/geostatista) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/geostatista.svg)](https://anaconda.org/conda-forge/geostatista) |
 
-geostatista - Statistics package
-=====================================================================
-**geostatista** is a statistics package
+# geostatista
 
-geostatista
+**geostatista** is the geostatistics tier of the [serapeum](https://github.com/serapeum-org)
+stack: variograms, kriging, and spatial autocorrelation, built on top of
+[pyramids](https://github.com/serapeum-org/pyramids) and its GDAL stack. Input is
+scattered point observations; output is a continuous surface plus an uncertainty
+estimate, or per-feature autocorrelation statistics.
 
-Main Features
--------------
-  - spatial interpolation (IDW/ISDW)
+## Main Features
 
+- Spatial interpolation via inverse-distance weighting (IDW/ISDW).
 
-Future work
--------------
-  - Kriging
+## Roadmap
 
+- Empirical variograms, model fitting, and ordinary kriging with a variance band.
+- Leave-one-out cross-validation of the kriged surface.
+- A spatial-weights subsystem for Moran's I / Getis-Ord Gi*.
 
+See `planning/architecture.md` for the full scope and object model.
 
-Installing geostatista
-===============
+## Installation
 
-Installing `geostatista` from the `conda-forge` channel can be achieved by:
+### conda (conda-forge)
 
-```
+```bash
 conda install -c conda-forge geostatista
 ```
 
-It is possible to list all of the versions of `geostatista` available on your platform with:
+List the versions available on your platform with:
 
-```
+```bash
 conda search geostatista --channel conda-forge
 ```
 
-## Install from Github
-to install the last development to time you can install the library from github
-```
-pip install git+https://github.com/MAfarrag/geostatista
+### pip (PyPI)
+
+```bash
+pip install geostatista
 ```
 
-## pip
-to install the last release you can easly use pip
-```
-pip install geostatista==0.1.6
+### From GitHub (latest development)
+
+```bash
+pip install git+https://github.com/serapeum-org/geostatista
 ```
 
-Quick start
-===========
+## Quick start
 
-```
-  >>> import geostatista
+```python
+import geostatista
+
+print(geostatista.__version__)
 ```
 
-[other code samples](https://geostatista.readthedocs.io/en/latest/?badge=latest)
+See the [documentation](https://serapeum-org.github.io/geostatista/) for the full guide.
