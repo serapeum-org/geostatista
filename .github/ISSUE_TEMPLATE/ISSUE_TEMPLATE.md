@@ -1,4 +1,4 @@
-* HapiSM version:
+* geostatista version:
 * Python version:
 * Operating System:
 

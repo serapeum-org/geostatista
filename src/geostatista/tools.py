@@ -4,6 +4,7 @@
 """
 
 import numpy as np
+from osgeo.gdal import Dataset
 
 # from statista.tools import Tools as tl
 

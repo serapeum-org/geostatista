@@ -26,9 +26,9 @@ Check relevant points.
 
 # Checklist:
 
-- [ ] updated version number in setup.py/pyproject.toml
-- [ ] updated environment.yml and the lock file
-- [ ] added changes to History.rst
-- [ ] updated the latest version in README file
+- [ ] version bump is handled by commitizen from the conventional-commit history (no manual edit)
+- [ ] updated pixi.lock if dependencies changed
+- [ ] added changes to docs/change-log.md
+- [ ] updated the docs where relevant
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes

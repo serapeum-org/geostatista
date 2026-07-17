@@ -20,6 +20,7 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -42,7 +43,6 @@ htmlcov/
 .nox/
 .coverage
 .coverage.*
-.coveragerc
 .cache
 nosetests.xml
 coverage.xml
@@ -50,8 +50,6 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
-cover/
-*junit-*
 
 # Translations
 *.mo
@@ -74,7 +72,6 @@ instance/
 docs/_build/
 
 # PyBuilder
-.pybuilder/
 target/
 
 # Jupyter Notebook
@@ -84,23 +81,8 @@ target/
 profile_default/
 ipython_config.py
 
-# IDEs
-.mr.developer.cfg
-.project
-.pydevproject
-.settings
-.idea
-
-# Complexity
-output/*.html
-output/*/index.html
-
-# Sphinx
-docs/_build
-
-
-# vim backup files
-.*.sw?
+# pyenv
+.python-version
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
@@ -112,7 +94,7 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# virtualenvs
+# Environments
 .env
 .venv
 env/
@@ -125,24 +107,34 @@ venv.bak/
 .spyderproject
 .spyproject
 
-*.npy
-*.pkl
+# Rope project settings
+.ropeproject
 
-# conda smithy ci-skeleton start
-build_artifacts
-# conda smithy ci-skeleton end
+# mkdocs documentation
+/site
 
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
 
+# Pyre type checker
+.pyre/
 .idea/
-*.iml
 
-*.qgz
-*.png
-.vscode
+# pixi environments (the multi-GB solved env dirs, never the lockfile)
+.pixi/
 
-.xml
-.idea/pyramids.iml
-.idea/.gitignore
-.idea
-mo_*
-conda/
+# IDE run configs
+.run/
+.DS_Store
+
+# Large example/training data (kept out of git history)
+*.npy
+
+# Claude Code files (kept local only, never tracked)
+.claude/
+CLAUDE.md
+
+# Planning / design notes (kept local only, never tracked)
+planning/
