@@ -145,7 +145,7 @@ def local_morans(fc, column: str, w: Weights, *, permutations: int = 999, alpha:
     x = fc[column].to_numpy(dtype=float)
     n = len(x)
     z = x - x.mean()
-    m2 = float((z**2).sum()) / n
+    m2 = float((z**2).sum()) / (n - 1)             # esda/Anselin normalization, so local_i matches the reference
     quadrant = np.zeros(n, dtype=int)
     local = np.full(n, np.nan)
     z_sim = np.full(n, np.nan)
@@ -168,10 +168,10 @@ def local_morans(fc, column: str, w: Weights, *, permutations: int = 999, alpha:
             if k == 0:
                 continue
             others = np.delete(z, i)
-            # sample k neighbour values per permutation with replacement — O(permutations*k) memory instead of
-            # O(permutations*n) from argsort-ing all n-1 others (an approximate conditional-permutation null).
-            sampled = others[rng.integers(0, len(others), (permutations, k))]
-            sims = (z[i] / m2) * (sampled @ neigh_w)
+            # conditional permutation: reassign the other n-1 values to the k neighbour slots WITHOUT replacement
+            # (matches esda/pysal; with-replacement would inflate the null spread by sqrt((n-1)/(n-1-k))).
+            picks = np.argsort(rng.random((permutations, len(others))), axis=1)[:, :k]
+            sims = (z[i] / m2) * (others[picks] @ neigh_w)
             p_sim[i] = _folded_p(sims, local[i], permutations)
             z_sim[i] = _sim_z(local[i], sims)
         significant = p_sim <= alpha

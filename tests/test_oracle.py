@@ -41,7 +41,7 @@ def test_morans_i_matches_esda():
     assert mine.z_norm == pytest.approx(reference.z_norm, rel=1e-3)
 
 
-def test_local_morans_correlates_with_esda():
+def test_local_morans_matches_esda():
     esda = pytest.importorskip("esda")
     libpysal = pytest.importorskip("libpysal")
     gdf = _lattice()
@@ -52,10 +52,12 @@ def test_local_morans_correlates_with_esda():
     reference = esda.Moran_Local(gdf["v"].to_numpy(), w_lp, permutations=999, seed=0)
 
     mine = local_morans(fc, "v", Weights.queen(fc), permutations=999, seed=0)
-    corr = np.corrcoef(mine["local_i"].to_numpy(), reference.Is)[0, 1]
-    assert corr > 0.999
-    # quadrants use the same 1=HH, 2=LH, 3=LL, 4=HL convention
-    assert np.mean(mine["quadrant"].to_numpy() == reference.q) > 0.95
+    # local_i is deterministic -> exact parity (catches any n vs n-1 scaling error, not just proportionality)
+    np.testing.assert_allclose(mine["local_i"].to_numpy(), reference.Is, rtol=1e-9)
+    assert np.mean(mine["quadrant"].to_numpy() == reference.q) > 0.95      # same 1=HH,2=LH,3=LL,4=HL convention
+    # both use the without-replacement conditional-permutation null, so z_sim magnitudes agree (no WR bias)
+    ratio = np.sqrt(np.mean(mine["z_sim"].to_numpy() ** 2) / np.mean(reference.z_sim**2))
+    assert 0.9 < ratio < 1.1
 
 
 def test_getis_ord_matches_esda():
