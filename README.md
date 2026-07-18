@@ -38,9 +38,8 @@ estimate, or per-feature autocorrelation statistics.
   [cleopatra](https://github.com/serapeum-org/cleopatra) (the `viz` extra).
 
 Everything hangs off `Samples`, a `FeatureCollection` subclass, so a column name is
-always a method argument. See `planning/architecture.md` for the full scope and
-object model, and [ADR 0001](docs/adr/0001-pyramids-geostatista-boundary.md) for the
-pyramids ↔ geostatista boundary (pyramids keeps IDW and the free `gdal.Grid`
+always a method argument. See [ADR 0001](docs/adr/0001-pyramids-geostatista-boundary.md)
+for the pyramids ↔ geostatista boundary (pyramids keeps IDW and the free `gdal.Grid`
 algorithms; geostatista owns every variogram and kriging variant).
 
 ## Installation
