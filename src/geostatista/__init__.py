@@ -18,3 +18,17 @@ try:
     __version__ = version(__name__)
 except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
+
+from . import models
+from .kriging import OrdinaryKriging
+from .samples import Samples
+from .surface import KrigedSurface
+from .variogram import Variogram
+
+__all__ = [
+    "Samples",
+    "Variogram",
+    "KrigedSurface",
+    "OrdinaryKriging",
+    "models",
+]
