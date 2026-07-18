@@ -55,6 +55,12 @@ def test_knn_and_row_standardize():
     np.testing.assert_allclose(rowsum, 1.0)
 
 
+def test_knn_rejects_k_ge_n():
+    fc = lattice(3)                                 # 9 features
+    with pytest.raises(ValueError):
+        Weights.knn(fc, 9)
+
+
 def test_distance_band_symmetric_and_islands():
     fc = lattice(5)
     w = Weights.distance_band(fc, 1.5)             # centroids 1 apart -> rook-like band

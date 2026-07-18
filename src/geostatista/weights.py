@@ -93,6 +93,8 @@ class Weights:
         """k-nearest-neighbor weights by centroid distance (asymmetric)."""
         coords = np.column_stack([fc.geometry.centroid.x.to_numpy(), fc.geometry.centroid.y.to_numpy()])
         n = len(coords)
+        if k >= n:
+            raise ValueError(f"knn: k ({k}) must be < the number of features ({n})")
         tree = cKDTree(coords)
         _, idx = tree.query(coords, k=k + 1)                        # +1 to drop self
         rows = np.repeat(np.arange(n), k)
