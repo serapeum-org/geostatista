@@ -42,3 +42,9 @@ jobs:
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@75cd11691c0faa626561e295848008c8a7dddffe # v5
+
+      - name: Test Jupyter notebooks
+        # Execute the example notebooks (nbval-lax: run every cell, fail on any error)
+        # so notebook breakage is caught in the normal matrix, not only on docs deploy.
+        # The py3xx envs carry the `dev` feature (nbval + nbconvert + ipykernel + cleopatra).
+        run: pixi run -e ${{ matrix.environment }} notebooks

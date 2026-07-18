@@ -32,6 +32,18 @@ vg.fit(model="spherical")                       # sets vg.nugget / vg.sill / vg.
 vg.predict(1000.0)                              # modeled semivariance at a 1 km lag
 ```
 
+**Which model?** `spherical` reaches its sill exactly at the range; `exponential` and `gaussian` approach it
+asymptotically (`gaussian` is smoothest near the origin); `matern` adds a smoothness parameter. Fit a few and let
+cross-validation (step 5) pick the best. The `estimator` argument to `variogram()` chooses how the empirical cloud
+is built — `"matheron"` (classic) or `"cressie"` (robust to outliers).
+
+**Look at the fit.** With the `viz` extra installed, `Variogram.plot` overlays the fitted curve on the empirical
+cloud (via cleopatra):
+
+```python
+fig, ax = vg.plot(title="Rainfall variogram")   # scatter of the cloud + the fitted model curve
+```
+
 ## 4. Krige onto a grid
 
 Kriging returns a `KrigedSurface` — a 2-band `Dataset` (band 0 estimate, band 1 variance).
@@ -43,11 +55,17 @@ surface = samples.interpolate_to_raster(
 # equivalently: surface = samples.krige("rain", vg, cell_size=1000, n_neighbors=32)
 
 surface.to_file("rain.tif")                     # 2-band GeoTIFF, self-describing (GS_* metadata tags)
+estimate = surface.estimate                     # band 0 as a Dataset
 variance = surface.variance                     # band 1 as a Dataset — the reason to prefer kriging over IDW
+
+estimate.plot()                                 # map the interpolated surface (via cleopatra)
+variance.plot()                                 # map where the estimate is least certain
 ```
 
 You can pass a model **name** instead of a fitted `Variogram` to auto-fit it internally
-(`variogram="spherical"`), or an existing `Dataset` as a `template=` to align the output grid cell-for-cell.
+(`variogram="spherical"`), or an existing `Dataset` as a `template=` to align the output grid cell-for-cell. For
+large sample sets, `n_neighbors` bounds the moving neighborhood around each target cell (pass `n_neighbors=None`
+for the exact global solve).
 
 ## 5. Validate honestly — leave-one-out
 

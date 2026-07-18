@@ -22,15 +22,25 @@ estimate, or per-feature autocorrelation statistics.
 
 ## Main Features
 
-- Spatial interpolation via inverse-distance weighting (IDW/ISDW).
+- **Variograms** — empirical variogram clouds (Matheron / Cressie estimators) and
+  fitted theoretical models (`spherical`, `exponential`, `gaussian`, `matern`,
+  plus `power` / `nugget` functions).
+- **Ordinary kriging** — from a fitted variogram onto a regular grid, returning a
+  2-band `KrigedSurface` (band 0 = estimate, band 1 = kriging variance) with a
+  `cKDTree` moving neighborhood for large sample sets.
+- **Validation** — leave-one-out cross-validation with ME / RMSE / standardized-error
+  diagnostics.
+- **Spatial autocorrelation** — a sparse `Weights` matrix (queen / rook contiguity,
+  k-nearest, distance-band) feeding global (Moran's I, Geary's C) and local
+  (Local Moran / LISA, Getis-Ord Gi*) statistics, with one-call
+  `spatial_autocorrelation` / `hotspots` facades.
+- **Plotting** — variogram, LISA-cluster, and hotspot maps through
+  [cleopatra](https://github.com/serapeum-org/cleopatra) (the `viz` extra).
 
-## Roadmap
-
-- Empirical variograms, model fitting, and ordinary kriging with a variance band.
-- Leave-one-out cross-validation of the kriged surface.
-- A spatial-weights subsystem for Moran's I / Getis-Ord Gi*.
-
-See `planning/architecture.md` for the full scope and object model.
+Everything hangs off `Samples`, a `FeatureCollection` subclass, so a column name is
+always a method argument. See [ADR 0001](docs/adr/0001-pyramids-geostatista-boundary.md)
+for the pyramids ↔ geostatista boundary (pyramids keeps IDW and the free `gdal.Grid`
+algorithms; geostatista owns every variogram and kriging variant).
 
 ## Installation
 
@@ -60,10 +70,29 @@ pip install git+https://github.com/serapeum-org/geostatista
 
 ## Quick start
 
-```python
-import geostatista
+Krige scattered point observations onto a grid, with an uncertainty band:
 
-print(geostatista.__version__)
+```python
+from geostatista import Samples
+
+samples = Samples.read_file("rain_gauges.geojson")   # a Samples is-a FeatureCollection
+
+vg = samples.variogram("rain").fit(model="spherical")   # explore + fit spatial structure
+surface = samples.krige("rain", vg, cell_size=1000)      # 2-band KrigedSurface (estimate + variance)
+surface.to_file("rain.tif")                              # self-describing GeoTIFF (GS_* tags)
+
+cv = samples.cross_validate("rain", vg)                  # leave-one-out diagnostics
+print(cv.attrs["summary"])                               # ME, RMSE, standardized error, correlation
+```
+
+Measure and map spatial autocorrelation over polygon features:
+
+```python
+from geostatista import Weights, morans_i, local_morans
+
+w = Weights.queen(tracts)                 # queen-contiguity weights
+morans_i(tracts, "income", w)             # global Moran's I (I, EI, z, p)
+lisa = local_morans(tracts, "income", w)  # per-feature LISA clusters (HH / LL / HL / LH / ns)
 ```
 
 See the [documentation](https://serapeum-org.github.io/geostatista/) for the full guide.
