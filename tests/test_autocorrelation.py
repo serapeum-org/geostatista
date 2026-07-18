@@ -164,9 +164,11 @@ def test_getis_ord_gi_statistic_matches_definition():
     non_star = getis_ord_gi(fc, "x", w, star=False)
     # Gi = sum_{j in N(i)} x_j / (total - x_i): A={B}=2/5, B={A,C}=4/4, C={B}=2/3
     np.testing.assert_allclose(non_star["gi"].to_numpy(), [2 / 5, 4 / 4, 2 / 3], rtol=1e-9)
-    # the two branches standardize differently, so their z-scores differ and stay finite
-    assert np.all(np.isfinite(non_star["z"].to_numpy()))
-    assert not np.allclose(star["z"].to_numpy(), non_star["z"].to_numpy())
+    # feature B is adjacent to every other feature -> degenerate Gi denominator -> z is nan (both branches)
+    assert np.isnan(star["z"].to_numpy()[1]) and np.isnan(non_star["z"].to_numpy()[1])
+    # the finite features (A, C) standardize differently between star and non-star
+    finite = [0, 2]
+    assert not np.allclose(star["z"].to_numpy()[finite], non_star["z"].to_numpy()[finite])
 
 
 def test_constant_field_is_guarded():
@@ -180,7 +182,8 @@ def test_constant_field_is_guarded():
     assert np.isnan(gearys_c(fc, "c", w, permutations=49, seed=0).C)
     lisa = local_morans(fc, "c", w, permutations=49, seed=0)
     assert np.all(np.isnan(lisa["local_i"].to_numpy())) and (lisa["cluster"] == "ns").all()
-    assert np.all(np.isfinite(getis_ord_gi(fc, "c", w)["z"].to_numpy()))   # Getis z guarded to 0
+    gi = getis_ord_gi(fc, "c", w)
+    assert np.all(np.isnan(gi["z"].to_numpy())) and (gi["hotspot"] == "ns").all()   # constant -> undefined (nan)
 
 
 # --- facade (S5) ---------------------------------------------------------------

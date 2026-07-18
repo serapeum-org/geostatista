@@ -217,7 +217,12 @@ def getis_ord_gi(fc, column: str, w: Weights, *, star: bool = True, alpha: float
         gi = np.divide(lag, total - x, out=np.full(n, np.nan), where=(total - x) != 0.0)
     std = np.sqrt(np.maximum(variance, 0.0))
     scale = std * spread
-    z = np.divide(lag - mean * wi, scale, out=np.zeros(n), where=scale > 0.0)  # guard constant/degenerate fields
+    # z is undefined where the denominator collapses — a constant field (std=0) or a degenerate topology
+    # (spread=0, e.g. a feature adjacent to every other): emit nan (-> p=nan, hotspot=ns) rather than a 0 that
+    # reads as "not significant".
+    z = np.divide(lag - mean * wi, scale, out=np.full(n, np.nan), where=scale > 0.0)
+    if not np.all(scale > 0.0):
+        logger.warning(f"getis_ord_gi: {int((scale <= 0.0).sum())} feature(s) have a degenerate Gi denominator -> nan")
     p = 2.0 * (1.0 - norm.cdf(np.abs(z)))
 
     hotspot = np.array(["ns"] * n, dtype=object)
