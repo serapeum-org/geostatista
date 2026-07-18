@@ -107,7 +107,12 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Reference:
-    - Tools: reference/tools.md
+    - Samples: reference/samples.md
+    - Variogram & models: reference/variogram.md
+    - Kriging: reference/kriging.md
+    - Weights: reference/weights.md
+    - Spatial autocorrelation: reference/autocorrelation.md
+    - Tools (legacy): reference/tools.md
   - About:
     - Change-log: change-log.md
     - Code of Conduct: CODE_OF_CONDUCT.md
