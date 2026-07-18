@@ -8,5 +8,12 @@
     "version": "develop",
     "title": "develop",
     "aliases": []
+  },
+  {
+    "version": "0.1.6",
+    "title": "0.1.6",
+    "aliases": [
+      "latest"
+    ]
   }
 ]
