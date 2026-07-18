@@ -61,7 +61,7 @@ plot_hotspots(hot)      # Getis-Ord Gi* hot / cold / ns map
 
 ## One-call facade
 
-The exact surface from the roadmap (pyramids #576 Item 5):
+The one-call facade (origin: pyramids #576 Item 5):
 
 ```python
 from geostatista import spatial_autocorrelation, hotspots
