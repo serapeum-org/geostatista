@@ -194,7 +194,11 @@ def getis_ord_gi(fc, column: str, w: Weights, *, star: bool = True, alpha: float
 
     `gi` is the Getis-Ord statistic itself (`sum_j w_ij x_j / sum_j x_j`). With `star=True` the focal feature is
     included (Gi*) and the standardization uses the global mean/variance; with `star=False` it is excluded (Gi)
-    and the standardization uses the leave-one-out moments over the other `n-1` observations.
+    and the standardization uses the leave-one-out moments over the other `n-1` observations. The weights are used
+    binary (with a unit self-weight for Gi*), regardless of the input `Weights` transform.
+
+    `gi` assumes a positive variable — for data summing to <= 0 the ratio is undefined and `gi` is nan, though the
+    `z` / `hotspot` outputs remain valid for signed data.
     """
     x = fc[column].to_numpy(dtype=float)
     n = len(x)
@@ -234,7 +238,7 @@ def getis_ord_gi(fc, column: str, w: Weights, *, star: bool = True, alpha: float
     out["z"] = z
     out["p"] = p
     out["hotspot"] = hotspot
-    out.attrs["provenance"] = {"stat": "getis_ord_gi", "star": star, "weights": w.transform_applied}
+    out.attrs["provenance"] = {"stat": "getis_ord_gi", "star": star, "weights": "binary"}
     return out
 
 
