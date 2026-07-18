@@ -65,10 +65,11 @@ def test_getis_ord_matches_esda():
     fc = FeatureCollection(gdf)
 
     w_lp = libpysal.weights.Queen.from_dataframe(gdf, use_index=False)
-    reference = esda.G_Local(gdf["v"].to_numpy(), w_lp, star=True, permutations=0)
+    # match our convention exactly: binary weights with a unit self-weight (classic binary Gi*).
+    reference = esda.G_Local(gdf["v"].to_numpy(), w_lp, transform="B", star=1.0, permutations=0)
 
     mine = getis_ord_gi(fc, "v", Weights.queen(fc), star=True)
-    assert np.corrcoef(mine["z"].to_numpy(), reference.Zs)[0, 1] > 0.99
+    np.testing.assert_allclose(mine["z"].to_numpy(), reference.Zs, rtol=1e-6, atol=1e-6)
 
 
 def test_ordinary_kriging_matches_pykrige():

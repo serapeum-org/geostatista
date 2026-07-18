@@ -62,6 +62,10 @@ dev = [
     "pytest-mock>=3.15.1",
     "pytest-mpl>=0.17.0",
     "cleopatra >=0.26.0",
+    # numerical-parity oracles for the `oracle`-marked tests (never imported by src/geostatista)
+    "esda >=2.5",
+    "libpysal >=4.9",
+    "pykrige >=1.7",
 ]
 docs = [
     "mkdocs >=1.6.1",
