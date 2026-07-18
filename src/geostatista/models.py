@@ -4,8 +4,10 @@ Each model is a pure `numpy` function returning the semivariance at lag distance
 `gamma(0) = 0` and rise to (or toward) the `sill`. The `nugget` is the limiting value as `h -> 0+` (the
 micro-scale discontinuity), and `sill` is the total sill (nugget + partial sill).
 
-The models use the *practical-range* convention: for `exponential` and `gaussian`, `gamma(range)` reaches
-~95% of the partial sill, matching the common geostatistics parameterization.
+The bounded models use the *practical-range* convention: for `exponential` and `gaussian`, `gamma(range)` reaches
+~95% of the partial sill (spherical reaches the sill exactly at `range`). `matern` is the exception — it uses the
+Stein `sqrt(2*nu)*h/range` (1/e) scaling, so a fitted `matern` range is not directly comparable to the others' on
+the same data.
 """
 
 from collections.abc import Callable
@@ -44,7 +46,7 @@ def gaussian(h: np.ndarray, nugget: float, sill: float, rng: float) -> np.ndarra
 
 
 def matern(h: np.ndarray, nugget: float, sill: float, rng: float, nu: float = 1.5) -> np.ndarray:
-    """Matern model with smoothness `nu` — generalizes exponential (nu=0.5) and gaussian (nu->inf)."""
+    """Matern model with smoothness `nu` (Stein 1/e range convention — see the module docstring)."""
     h = np.asarray(h, dtype=float)
     scaled = np.sqrt(2.0 * nu) * np.where(h > 0.0, h, 1.0) / rng
     coef = (2.0 ** (1.0 - nu)) / _gamma_fn(nu)
