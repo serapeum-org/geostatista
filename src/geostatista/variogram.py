@@ -111,11 +111,31 @@ class Variogram:
         )
         return frame
 
-    def plot(self, *args, **kwargs):  # pragma: no cover - K7, viz extra
-        """Plot the empirical cloud + fitted curve (via cleopatra). Not yet wired — see task K7."""
-        raise NotImplementedError(
-            "Variogram.plot is not wired yet (task K7: variogram/surface plotting via cleopatra)"
+    def plot(self, ax=None, *, title: str = "Variogram"):
+        """Plot the empirical cloud (+ fitted curve, once fitted) via cleopatra.
+
+        Draws the empirical semivariance as a scatter and, if the variogram has been fitted, overlays the model
+        curve on the same axis. Requires the `viz` extra (cleopatra). Returns the matplotlib `(fig, ax)`.
+
+        Raises:
+            ImportError: If cleopatra (the `viz` extra) is not installed.
+        """
+        try:
+            from cleopatra.line_glyph import LineGlyph
+            from cleopatra.scatter_glyph import ScatterGlyph
+        except ImportError as exc:  # pragma: no cover
+            raise ImportError(
+                "Variogram.plot requires the 'viz' extra (cleopatra): install geostatista[viz]"
+            ) from exc
+        valid = np.isfinite(self.semivariance)
+        fig, ax, _ = ScatterGlyph(self.lags[valid], self.semivariance[valid], ax=ax).plot(
+            ax=ax, title=title, add_colorbar=False
         )
+        if self._func is not None:
+            lags = np.linspace(0.0, float(self.lags.max()), 100)
+            LineGlyph(lags, self.predict(lags), ax=ax).line(ax=ax, label=self.model or "model")
+        result = (fig, ax)
+        return result
 
     def __repr__(self) -> str:
         if self.model is None:
