@@ -7,12 +7,19 @@ stats return the input features annotated with per-feature inference (z / p / cl
 from dataclasses import dataclass, field
 
 import numpy as np
+from loguru import logger
 from scipy import sparse
 from scipy.stats import norm
 
 from .weights import Weights
 
 _QUADRANT_LABEL = {1: "HH", 2: "LH", 3: "LL", 4: "HL"}
+
+
+def _sim_z(value: float, sims: np.ndarray) -> float:
+    """Standardize `value` against the permutation distribution `sims`, guarding a zero spread (constant field)."""
+    std = float(sims.std())
+    return 0.0 if std == 0.0 else (value - float(sims.mean())) / std
 
 
 def _s1_s2(matrix) -> tuple[float, float]:
@@ -81,23 +88,32 @@ def morans_i(fc, column: str, w: Weights, *, permutations: int = 999, transform:
     n = len(x)
     s0 = float(matrix.sum())
     z2 = float((z**2).sum())
-    lag = matrix @ z
-    moran = (n / s0) * float(z @ lag) / z2
     expected = -1.0 / (n - 1)
+    if z2 == 0.0:
+        logger.warning(f"morans_i: column {column!r} is constant — Moran's I is undefined")
+        result = MoranResult(np.nan, expected, np.nan, np.nan, np.nan, np.nan, n, permutations, transform, w.transform_applied)
+    else:
+        moran = (n / s0) * float(z @ (matrix @ z)) / z2
+        s1, s2 = _s1_s2(matrix)
+        var = (n * n * s1 - n * s2 + 3 * s0 * s0) / (s0 * s0 * (n * n - 1)) - expected * expected
+        z_norm = (moran - expected) / np.sqrt(var)
+        p_norm = 2.0 * (1.0 - norm.cdf(abs(z_norm)))
+        rng = np.random.default_rng(seed)
+        sims = np.empty(permutations)
+        for p in range(permutations):
+            zp = rng.permutation(z)
+            sims[p] = (n / s0) * float(zp @ (matrix @ zp)) / z2
+        p_sim = _folded_p(sims, moran, permutations)
+        result = MoranResult(
+            moran, expected, float(z_norm), float(p_norm), _sim_z(moran, sims), p_sim, n, permutations, transform, w.transform_applied
+        )
+    return result
 
-    s1, s2 = _s1_s2(matrix)
-    var = (n * n * s1 - n * s2 + 3 * s0 * s0) / (s0 * s0 * (n * n - 1)) - expected * expected
-    z_norm = (moran - expected) / np.sqrt(var)
-    p_norm = 2.0 * (1.0 - norm.cdf(abs(z_norm)))
 
-    rng = np.random.default_rng(seed)
-    sims = np.empty(permutations)
-    for p in range(permutations):
-        zp = rng.permutation(z)
-        sims[p] = (n / s0) * float(zp @ (matrix @ zp)) / z2
-    p_sim = _folded_p(sims, moran, permutations)
-    z_sim = (moran - sims.mean()) / sims.std()
-    return MoranResult(moran, expected, float(z_norm), float(p_norm), float(z_sim), p_sim, n, permutations, transform, w.transform_applied)
+def _geary_c(values: np.ndarray, row: np.ndarray, col: np.ndarray, data: np.ndarray, n: int, s0: float, z2: float) -> float:
+    """Geary's C for `values` over the sparse-weight `(row, col, data)` triplet."""
+    numer = float((data * (values[row] - values[col]) ** 2).sum())
+    return (n - 1) * numer / (2.0 * s0 * z2)
 
 
 def gearys_c(fc, column: str, w: Weights, *, permutations: int = 999, seed: int | None = None) -> GearyResult:
@@ -105,22 +121,21 @@ def gearys_c(fc, column: str, w: Weights, *, permutations: int = 999, seed: int 
     matrix = w.sparse
     x = fc[column].to_numpy(dtype=float)
     n = len(x)
-    z = x - x.mean()
-    z2 = float((z**2).sum())
+    z2 = float(((x - x.mean()) ** 2).sum())
     s0 = float(matrix.sum())
     coo = matrix.tocoo()
-
-    def _c(values: np.ndarray) -> float:
-        diff2 = (values[coo.row] - values[coo.col]) ** 2
-        numer = float((coo.data * diff2).sum())
-        return (n - 1) * numer / (2.0 * s0 * z2)
-
-    geary = _c(x)
-    rng = np.random.default_rng(seed)
-    sims = np.array([_c(rng.permutation(x)) for _ in range(permutations)])
-    p_sim = _folded_p(sims, geary, permutations)
-    z_sim = (geary - sims.mean()) / sims.std()
-    return GearyResult(geary, 1.0, float(z_sim), p_sim, n, permutations)
+    if z2 == 0.0:
+        logger.warning(f"gearys_c: column {column!r} is constant — Geary's C is undefined")
+        result = GearyResult(np.nan, 1.0, np.nan, np.nan, n, permutations)
+    else:
+        geary = _geary_c(x, coo.row, coo.col, coo.data, n, s0, z2)
+        rng = np.random.default_rng(seed)
+        sims = np.array(
+            [_geary_c(rng.permutation(x), coo.row, coo.col, coo.data, n, s0, z2) for _ in range(permutations)]
+        )
+        p_sim = _folded_p(sims, geary, permutations)
+        result = GearyResult(geary, 1.0, _sim_z(geary, sims), p_sim, n, permutations)
+    return result
 
 
 def local_morans(fc, column: str, w: Weights, *, permutations: int = 999, alpha: float = 0.05, seed: int | None = None):
@@ -131,36 +146,38 @@ def local_morans(fc, column: str, w: Weights, *, permutations: int = 999, alpha:
     n = len(x)
     z = x - x.mean()
     m2 = float((z**2).sum()) / n
-    lag = np.asarray(matrix @ z).ravel()
-    local = (z / m2) * lag
-
     quadrant = np.zeros(n, dtype=int)
-    quadrant[(z > 0) & (lag > 0)] = 1
-    quadrant[(z < 0) & (lag > 0)] = 2
-    quadrant[(z < 0) & (lag < 0)] = 3
-    quadrant[(z > 0) & (lag < 0)] = 4
-
-    rng = np.random.default_rng(seed)
-    p_sim = np.full(n, np.nan)
+    local = np.full(n, np.nan)
     z_sim = np.full(n, np.nan)
-    for i in range(n):
-        start, end = matrix.indptr[i], matrix.indptr[i + 1]
-        neigh_w = matrix.data[start:end]
-        k = len(neigh_w)
-        if k == 0:
-            continue
-        others = np.delete(z, i)
-        order = np.argsort(rng.random((permutations, len(others))), axis=1)[:, :k]
-        sampled = others[order]
-        sims = (z[i] / m2) * (sampled @ neigh_w)
-        p_sim[i] = _folded_p(sims, local[i], permutations)
-        z_sim[i] = (local[i] - sims.mean()) / sims.std()
-
-    significant = p_sim <= alpha
+    p_sim = np.full(n, np.nan)
     cluster = np.array(["ns"] * n, dtype=object)
-    for i in range(n):
-        if significant[i] and quadrant[i]:
-            cluster[i] = _QUADRANT_LABEL[quadrant[i]]
+    if m2 == 0.0:
+        logger.warning(f"local_morans: column {column!r} is constant — LISA is undefined")
+    else:
+        lag = np.asarray(matrix @ z).ravel()
+        local = (z / m2) * lag
+        quadrant[(z > 0) & (lag > 0)] = 1
+        quadrant[(z < 0) & (lag > 0)] = 2
+        quadrant[(z < 0) & (lag < 0)] = 3
+        quadrant[(z > 0) & (lag < 0)] = 4
+        rng = np.random.default_rng(seed)
+        for i in range(n):
+            start, end = matrix.indptr[i], matrix.indptr[i + 1]
+            neigh_w = matrix.data[start:end]
+            k = len(neigh_w)
+            if k == 0:
+                continue
+            others = np.delete(z, i)
+            # sample k neighbour values per permutation with replacement — O(permutations*k) memory instead of
+            # O(permutations*n) from argsort-ing all n-1 others (an approximate conditional-permutation null).
+            sampled = others[rng.integers(0, len(others), (permutations, k))]
+            sims = (z[i] / m2) * (sampled @ neigh_w)
+            p_sim[i] = _folded_p(sims, local[i], permutations)
+            z_sim[i] = _sim_z(local[i], sims)
+        significant = p_sim <= alpha
+        for i in range(n):
+            if significant[i] and quadrant[i]:
+                cluster[i] = _QUADRANT_LABEL[quadrant[i]]
 
     out = fc.copy()
     out["local_i"] = local

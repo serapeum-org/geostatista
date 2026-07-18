@@ -145,6 +145,20 @@ def test_getis_ord_gi_statistic_matches_definition():
     assert not np.allclose(star["z"].to_numpy(), non_star["z"].to_numpy())
 
 
+def test_constant_field_is_guarded():
+    """A constant column has no autocorrelation — statistics are nan (not inf/crash)."""
+    from shapely.geometry import box
+
+    polys = [box(c, 0, c + 1, 1) for c in range(6)]
+    fc = FeatureCollection(gpd.GeoDataFrame({"c": np.ones(6)}, geometry=polys, crs="EPSG:32633"))
+    w = Weights.queen(fc)
+    assert np.isnan(morans_i(fc, "c", w, permutations=49, seed=0).I)
+    assert np.isnan(gearys_c(fc, "c", w, permutations=49, seed=0).C)
+    lisa = local_morans(fc, "c", w, permutations=49, seed=0)
+    assert np.all(np.isnan(lisa["local_i"].to_numpy())) and (lisa["cluster"] == "ns").all()
+    assert np.all(np.isfinite(getis_ord_gi(fc, "c", w)["z"].to_numpy()))   # Getis z guarded to 0
+
+
 # --- facade (S5) ---------------------------------------------------------------
 
 def test_facade_functions():
