@@ -80,6 +80,17 @@ def test_weights_transform_invalid_kind():
         Weights.queen(_polys(3)).transform("bogus")
 
 
+def test_ordinary_kriging_rejects_zero_sill():
+    from geostatista import Variogram, models
+
+    vg = Variogram(np.array([1.0]), np.array([1.0]), np.array([1]))
+    vg.model, vg.nugget, vg.sill, vg.range_, vg._func = "spherical", 0.0, 0.0, 10.0, models.spherical
+    with pytest.raises(ValueError):
+        from geostatista.kriging import OrdinaryKriging
+
+        OrdinaryKriging(*_samples(20)._clean("t", "z"), vg)
+
+
 def test_variogram_repr_and_empty_bins():
     from geostatista.variogram import empirical_variogram
 
