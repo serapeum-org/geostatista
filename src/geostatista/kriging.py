@@ -33,6 +33,8 @@ class OrdinaryKriging:
         coords, values = average_duplicates(np.asarray(coords, dtype=float), np.asarray(values, dtype=float))
         if variogram.sill is None:
             raise ValueError("OrdinaryKriging: variogram must be fitted (call .fit) before kriging")
+        if variogram.sill <= 0.0:
+            raise ValueError("OrdinaryKriging: variogram sill is 0 (constant field) — kriging is undefined")
         self.coords = coords
         self.values = values
         self.variogram = variogram

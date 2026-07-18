@@ -64,6 +64,8 @@ def fit_model(
     weights = np.asarray(counts, dtype=float)[valid]
 
     emp_sill = float(np.max(g))
+    if emp_sill <= 0.0:
+        raise VariogramFitError("fit: the empirical semivariance is zero everywhere (constant field) — cannot fit")
     emp_range = float(np.max(h))
     p0 = [0.0, emp_sill, 0.5 * emp_range]
     lower = [0.0, 0.0, 1e-9 * emp_range]

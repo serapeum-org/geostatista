@@ -217,6 +217,15 @@ def test_surface_estimate_band():
     assert surface.estimate.band_count == 1
 
 
+def test_krige_constant_field_raises():
+    from geostatista import VariogramFitError
+
+    xy = np.random.default_rng(0).uniform(0.0, 100.0, (20, 2))
+    s = Samples(gpd.GeoDataFrame({"z": np.ones(20)}, geometry=[Point(x, y) for x, y in xy], crs="EPSG:32633"))
+    with pytest.raises(VariogramFitError):                          # constant field -> zero sill, refuse to krige
+        s.krige("z", "spherical", cell_size=10.0)
+
+
 def test_surface_roundtrip(tmp_path):
     s = make_samples(40)
     vg = fitted_variogram(s)
