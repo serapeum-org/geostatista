@@ -187,6 +187,36 @@ def test_cressie_estimator_is_robust_to_outlier():
     assert np.nanmean(cressie.semivariance) < np.nanmean(matheron.semivariance)  # robust to the outlier
 
 
+def test_krige_onto_template_grid():
+    from pyramids.dataset import Dataset
+
+    s = make_samples(50)
+    vg = fitted_variogram(s)
+    template = Dataset.create_from_array(np.zeros((10, 12)), geo=(0.0, 8.0, 0.0, 100.0, 0.0, -8.0), epsg=32633)
+    surface = s.krige("z", vg, template=template)
+    assert np.asarray(surface.read_array()).shape == (2, 10, 12)     # aligns cell-for-cell with the template
+    assert surface.epsg == 32633
+
+
+def test_predict_grid_requires_cell_size_or_template():
+    s = make_samples(30)
+    engine = OrdinaryKriging(*s._clean("t", "z"), fitted_variogram(s))
+    with pytest.raises(ValueError):
+        engine.predict_grid()                                        # neither cell_size nor template
+
+
+def test_variogram_predict_before_fit_raises():
+    s = make_samples(20)
+    with pytest.raises(RuntimeError):
+        s.variogram("z").predict(10.0)
+
+
+def test_surface_estimate_band():
+    s = make_samples(40)
+    surface = s.krige("z", fitted_variogram(s), cell_size=10.0)
+    assert surface.estimate.band_count == 1
+
+
 def test_surface_roundtrip(tmp_path):
     s = make_samples(40)
     vg = fitted_variogram(s)

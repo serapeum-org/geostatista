@@ -61,6 +61,30 @@ def test_knn_rejects_k_ge_n():
         Weights.knn(fc, 9)
 
 
+def test_neighbors_property_and_inverse_distance_band():
+    fc = lattice(4)
+    w = Weights.queen(fc)
+    assert isinstance(w.neighbors, dict) and len(w.neighbors) == 16
+    inv = Weights.distance_band(fc, 1.5, binary=False)
+    assert (inv.sparse.data > 0).all() and (inv.sparse.data != 1.0).any()   # inverse-distance weights, not binary
+
+
+def test_facade_string_weight_specs():
+    fc = lattice(4)
+    for spec in ("queen", "rook", "knn", "distance_band"):
+        summary = spatial_autocorrelation(fc, "v", weights=spec)
+        assert summary["weights"] == "b" and summary["n"] == 16
+
+
+def test_local_morans_island_is_ns():
+    from shapely.geometry import box
+
+    polys = [box(0, 0, 1, 1), box(1, 0, 2, 1), box(50, 50, 51, 51)]   # two adjacent + one far island
+    fc = FeatureCollection(gpd.GeoDataFrame({"v": [1.0, 2.0, 3.0]}, geometry=polys, crs="EPSG:32633"))
+    out = local_morans(fc, "v", Weights.queen(fc), permutations=49, seed=0)
+    assert out["cluster"].iloc[2] == "ns" and np.isnan(out["p_sim"].iloc[2])   # island: no neighbors
+
+
 def test_distance_band_symmetric_and_islands():
     fc = lattice(5)
     w = Weights.distance_band(fc, 1.5)             # 1.5 > diagonal (~1.414) -> queen-like band (degree 8 interior)
