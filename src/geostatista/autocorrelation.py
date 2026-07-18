@@ -4,7 +4,7 @@ Free functions taking a `FeatureCollection` + a column + a `Weights`; global sta
 stats return the input features annotated with per-feature inference (z / p / cluster / hotspot columns).
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 from loguru import logger
