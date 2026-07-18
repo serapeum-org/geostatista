@@ -37,3 +37,30 @@ def test_variogram_plot_via_cleopatra():
     vg.fit("spherical")
     _, ax2 = vg.plot()                                    # scatter + fitted model curve
     assert len(ax2.get_lines()) >= 1                      # the model curve is a Line2D
+
+
+def _tracts(n: int = 6):
+    from pyramids.feature import FeatureCollection
+    from shapely.geometry import box
+
+    polys, value = [], []
+    for r in range(n):
+        for c in range(n):
+            polys.append(box(c, r, c + 1, r + 1))
+            value.append(float(r))
+    return FeatureCollection(gpd.GeoDataFrame({"v": value}, geometry=polys, crs="EPSG:32633"))
+
+
+def test_lisa_and_hotspot_maps_via_cleopatra():
+    pytest.importorskip("cleopatra")
+    from geostatista import Weights, getis_ord_gi, local_morans, plot_hotspots, plot_lisa
+
+    tracts = _tracts()
+    w = Weights.queen(tracts)
+    lisa = local_morans(tracts, "v", w, permutations=99, seed=0)
+    fig1, ax1 = plot_lisa(lisa)
+    assert fig1 is not None and len(ax1.collections) >= 1     # the polygon collection was drawn
+
+    hot = getis_ord_gi(tracts, "v", w, star=True)
+    fig2, ax2 = plot_hotspots(hot)
+    assert fig2 is not None and len(ax2.collections) >= 1

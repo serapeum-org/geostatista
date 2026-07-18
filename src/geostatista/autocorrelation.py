@@ -230,3 +230,43 @@ def hotspots(fc, column: str, *, weights: "Weights | str" = "queen"):
     """One-call Getis-Ord Gi* hotspot map (the #576 Item-5 facade). Returns an annotated FeatureCollection."""
     w = _build_weights(fc, weights)
     return getis_ord_gi(fc, column, w, star=True)
+
+
+# --- significance-class maps (S6) — via cleopatra, conventional diverging palette ------------------------
+
+# Ordinal codes so a diverging colormap renders the conventional look (high=red, low=blue, non-significant=neutral).
+_HOTSPOT_ORDINAL = {"cold": -1.0, "ns": 0.0, "hot": 1.0}
+_CLUSTER_ORDINAL = {"LL": -2.0, "LH": -1.0, "ns": 0.0, "HL": 1.0, "HH": 2.0}
+
+
+def _polygon_exterior(geom) -> np.ndarray:
+    """The exterior ring of a (multi)polygon as an `(n, 2)` coordinate array."""
+    if geom.geom_type == "MultiPolygon":
+        geom = max(geom.geoms, key=lambda part: part.area)
+    return np.asarray(geom.exterior.coords)
+
+
+def _class_choropleth(fc, codes: np.ndarray, title: str, vabs: float, ax):
+    """Render a per-feature diverging choropleth of signed class `codes` via cleopatra's PolygonGlyph."""
+    try:
+        from cleopatra.polygon_glyph import PolygonGlyph
+    except ImportError as exc:  # pragma: no cover
+        raise ImportError("plotting requires the 'viz' extra (cleopatra): install geostatista[viz]") from exc
+    polygons = [_polygon_exterior(g) for g in fc.geometry.values]
+    fig, ax, _ = PolygonGlyph(
+        polygons, values=np.asarray(codes, dtype=float), ax=ax, cmap="coolwarm", vmin=-vabs, vmax=vabs
+    ).plot(ax=ax, title=title)
+    result = (fig, ax)
+    return result
+
+
+def plot_lisa(fc, *, ax=None):
+    """Map the Local Moran (LISA) `cluster` classes — HH red … LL blue, ns neutral. Returns `(fig, ax)`."""
+    codes = fc["cluster"].map(_CLUSTER_ORDINAL).to_numpy(dtype=float)
+    return _class_choropleth(fc, codes, "LISA clusters", 2.0, ax)
+
+
+def plot_hotspots(fc, *, ax=None):
+    """Map the Getis-Ord Gi* `hotspot` classes — hot red, cold blue, ns neutral. Returns `(fig, ax)`."""
+    codes = fc["hotspot"].map(_HOTSPOT_ORDINAL).to_numpy(dtype=float)
+    return _class_choropleth(fc, codes, "Getis-Ord Gi* hotspots", 1.0, ax)

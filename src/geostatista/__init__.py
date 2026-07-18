@@ -26,6 +26,8 @@ from .autocorrelation import (
     hotspots,
     local_morans,
     morans_i,
+    plot_hotspots,
+    plot_lisa,
     spatial_autocorrelation,
 )
 from .kriging import OrdinaryKriging
@@ -49,4 +51,6 @@ __all__ = [
     "getis_ord_gi",
     "spatial_autocorrelation",
     "hotspots",
+    "plot_lisa",
+    "plot_hotspots",
 ]
