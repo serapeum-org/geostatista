@@ -1,5 +1,15 @@
 # Change log
 
+## 0.2.0 (2026-07-18)
+
+### Feat
+
+- add geostatistics core (variograms, kriging, autocorrelation) (#50)
+
+### Fix
+
+- **ci**: remove template distributions test stub that fails the pure-wheel job (#51)
+
 ## 0.1.6 (2023-01-31)
 
 - bump up versions
