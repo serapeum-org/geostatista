@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://serapeum-org.github.io/geostatista/main/contributing/">
+        <link rel="canonical" href="https://serapeum-org.github.io/geostatista/main/guides/kriging-workflow/">
       
       
-        <link rel="prev" href="../CODE_OF_CONDUCT/">
+        <link rel="prev" href="../../installation/">
       
       
-        <link rel="next" href="../LICENSE/">
+        <link rel="next" href="../spatial-autocorrelation/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Contributing - geostatista</title>
+        <title>Kriging workflow - geostatista</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,11 +53,11 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../assets/stylesheets/panzoom.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/panzoom.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#contributing" class="md-skip">
+        <a href="#kriging-workflow" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="geostatista" class="md-header__button md-logo" aria-label="geostatista" data-md-component="logo">
+    <a href="../.." title="geostatista" class="md-header__button md-logo" aria-label="geostatista" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -123,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Contributing
+              Kriging workflow
             
           </span>
         </div>
@@ -240,7 +240,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -259,7 +259,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../installation/" class="md-tabs__link">
+      <a href="../../installation/" class="md-tabs__link">
         
   
   
@@ -276,11 +276,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../guides/kriging-workflow/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -300,7 +302,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../examples/01_kriging_workflow/" class="md-tabs__link">
+        <a href="../../examples/01_kriging_workflow/" class="md-tabs__link">
           
   
   
@@ -320,7 +322,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../reference/samples/" class="md-tabs__link">
+        <a href="../../reference/samples/" class="md-tabs__link">
           
   
   
@@ -336,13 +338,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../adr/0001-pyramids-geostatista-boundary/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../adr/0001-pyramids-geostatista-boundary/" class="md-tabs__link">
           
   
   
@@ -382,7 +382,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="geostatista" class="md-nav__button md-logo" aria-label="geostatista" data-md-component="logo">
+    <a href="../.." title="geostatista" class="md-nav__button md-logo" aria-label="geostatista" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -412,7 +412,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -439,7 +439,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../../installation/" class="md-nav__link">
         
   
   
@@ -463,24 +463,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -498,7 +503,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -513,10 +518,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../guides/kriging-workflow/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kriging workflow
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -532,6 +564,92 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-load-points-into-samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Load points into Samples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explore-spatial-structure-the-variogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explore spatial structure — the variogram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-fit-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Fit a model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-krige-onto-a-grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Krige onto a grid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-validate-honestly-leave-one-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Validate honestly — leave-one-out
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-idw-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where IDW lives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -544,7 +662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/spatial-autocorrelation/" class="md-nav__link">
+      <a href="../spatial-autocorrelation/" class="md-nav__link">
         
   
   
@@ -629,7 +747,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/01_kriging_workflow/" class="md-nav__link">
+      <a href="../../examples/01_kriging_workflow/" class="md-nav__link">
         
   
   
@@ -657,7 +775,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/02_spatial_autocorrelation/" class="md-nav__link">
+      <a href="../../examples/02_spatial_autocorrelation/" class="md-nav__link">
         
   
   
@@ -742,7 +860,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/samples/" class="md-nav__link">
+      <a href="../../reference/samples/" class="md-nav__link">
         
   
   
@@ -770,7 +888,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/variogram/" class="md-nav__link">
+      <a href="../../reference/variogram/" class="md-nav__link">
         
   
   
@@ -798,7 +916,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/kriging/" class="md-nav__link">
+      <a href="../../reference/kriging/" class="md-nav__link">
         
   
   
@@ -826,7 +944,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/weights/" class="md-nav__link">
+      <a href="../../reference/weights/" class="md-nav__link">
         
   
   
@@ -854,7 +972,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/autocorrelation/" class="md-nav__link">
+      <a href="../../reference/autocorrelation/" class="md-nav__link">
         
   
   
@@ -882,7 +1000,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/tools/" class="md-nav__link">
+      <a href="../../reference/tools/" class="md-nav__link">
         
   
   
@@ -914,29 +1032,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -954,7 +1067,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -972,7 +1085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adr/0001-pyramids-geostatista-boundary/" class="md-nav__link">
+      <a href="../../adr/0001-pyramids-geostatista-boundary/" class="md-nav__link">
         
   
   
@@ -1000,7 +1113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../change-log/" class="md-nav__link">
+      <a href="../../change-log/" class="md-nav__link">
         
   
   
@@ -1028,7 +1141,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+      <a href="../../CODE_OF_CONDUCT/" class="md-nav__link">
         
   
   
@@ -1053,37 +1166,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Contributing
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   
@@ -1099,59 +1185,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#development-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Development setup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pull-request-process" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pull Request Process
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#code-of-conduct" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code of Conduct
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1164,7 +1197,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../LICENSE/" class="md-nav__link">
+      <a href="../../LICENSE/" class="md-nav__link">
         
   
   
@@ -1219,10 +1252,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#development-setup" class="md-nav__link">
+  <a href="#1-load-points-into-samples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Development setup
+        1. Load points into Samples
       
     </span>
   </a>
@@ -1230,10 +1263,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pull-request-process" class="md-nav__link">
+  <a href="#2-explore-spatial-structure-the-variogram" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pull Request Process
+        2. Explore spatial structure — the variogram
       
     </span>
   </a>
@@ -1241,10 +1274,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#code-of-conduct" class="md-nav__link">
+  <a href="#3-fit-a-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Code of Conduct
+        3. Fit a model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-krige-onto-a-grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Krige onto a grid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-validate-honestly-leave-one-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Validate honestly — leave-one-out
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-idw-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where IDW lives
       
     </span>
   </a>
@@ -1268,7 +1334,7 @@
 
 
   
-    <a href="https://github.com/serapeum-org/geostatista/edit/master/docs/contributing.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/serapeum-org/geostatista/edit/master/docs/guides/kriging-workflow.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1277,43 +1343,54 @@
     
       
     
-    <a href="https://github.com/serapeum-org/geostatista/raw/master/docs/contributing.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/serapeum-org/geostatista/raw/master/docs/guides/kriging-workflow.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-<h1 id="contributing"><a class="toclink" href="#contributing">Contributing</a><a class="headerlink" href="#contributing" title="Permanent link">#</a></h1>
-<p>When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change.</p>
-<p>Please note we have a code of conduct, please follow it in all your interactions with the project.</p>
-<h2 id="development-setup"><a class="toclink" href="#development-setup">Development setup</a><a class="headerlink" href="#development-setup" title="Permanent link">#</a></h2>
-<p>This repository uses <a href="https://pixi.sh">pixi</a> for environment and task management:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="go">git clone https://github.com/serapeum-org/geostatista.git</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="go">cd geostatista</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">pixi install -e dev</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">pixi run -e dev main        # run the test suite</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">pixi run -e docs docs-serve # serve the docs locally</span>
+<h1 id="kriging-workflow"><a class="toclink" href="#kriging-workflow">Kriging workflow</a><a class="headerlink" href="#kriging-workflow" title="Permanent link">#</a></h1>
+<p>The kriging pipeline is: <strong>explore spatial structure → fit a variogram → krige onto a grid → validate honestly.</strong>
+Everything hangs off <code>Samples</code>, a <code>FeatureCollection</code> subclass, so <code>column</code> is always a method argument.</p>
+<h2 id="1-load-points-into-samples"><a class="toclink" href="#1-load-points-into-samples">1. Load points into <code>Samples</code></a><a class="headerlink" href="#1-load-points-into-samples" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyramids.feature</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureCollection</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geostatista</span><span class="w"> </span><span class="kn">import</span> <span class="n">Samples</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">gauges</span> <span class="o">=</span> <span class="n">FeatureCollection</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;rain_gauges.geojson&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">samples</span> <span class="o">=</span> <span class="n">Samples</span><span class="p">(</span><span class="n">gauges</span><span class="p">)</span>                       <span class="c1"># a Samples is-a FeatureCollection</span>
 </code></pre></div>
-<p>Install the pre-commit hooks once so formatting and linting run on every commit:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="go">pixi run -e dev pre-commit install</span>
+<h2 id="2-explore-spatial-structure-the-variogram"><a class="toclink" href="#2-explore-spatial-structure-the-variogram">2. Explore spatial structure — the variogram</a><a class="headerlink" href="#2-explore-spatial-structure-the-variogram" title="Permanent link">#</a></h2>
+<p>Look before you krige. The empirical variogram bins pairwise squared differences by lag distance.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">vg</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">variogram</span><span class="p">(</span><span class="s2">&quot;rain&quot;</span><span class="p">,</span> <span class="n">n_lags</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">50_000</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">vg</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">()</span>                               <span class="c1"># lag / semivariance / count</span>
 </code></pre></div>
-<h2 id="pull-request-process"><a class="toclink" href="#pull-request-process">Pull Request Process</a><a class="headerlink" href="#pull-request-process" title="Permanent link">#</a></h2>
-<ol>
-<li>Ensure any install or build dependencies are removed before the end of the layer when doing a
-   build.</li>
-<li>Update the docs with details of changes to the interface, this includes new environment
-   variables, exposed ports, useful file locations and container parameters.</li>
-<li>Versioning is handled by <a href="https://commitizen-tools.github.io/commitizen/">Commitizen</a> from the
-   conventional-commit history; do not bump the version by hand. The versioning scheme we use is
-   <a href="http://semver.org/">SemVer</a> (staying in <code>0.x</code> until the API stabilizes).</li>
-<li>You may merge the Pull Request in once you have the sign-off of another developer, or if you do
-   not have permission to do that, you may request a reviewer to merge it for you.</li>
-</ol>
-<h2 id="code-of-conduct"><a class="toclink" href="#code-of-conduct">Code of Conduct</a><a class="headerlink" href="#code-of-conduct" title="Permanent link">#</a></h2>
-<p>Please read the <a href="../CODE_OF_CONDUCT/">Code of Conduct</a> that governs all interactions in this
-project.</p>
+<h2 id="3-fit-a-model"><a class="toclink" href="#3-fit-a-model">3. Fit a model</a><a class="headerlink" href="#3-fit-a-model" title="Permanent link">#</a></h2>
+<p>Kriging needs a valid positive-definite model, not the empirical cloud. Choose <code>spherical</code>, <code>exponential</code>,
+<code>gaussian</code>, or <code>matern</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">vg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;spherical&quot;</span><span class="p">)</span>                       <span class="c1"># sets vg.nugget / vg.sill / vg.range_</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">vg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">)</span>                              <span class="c1"># modeled semivariance at a 1 km lag</span>
+</code></pre></div>
+<h2 id="4-krige-onto-a-grid"><a class="toclink" href="#4-krige-onto-a-grid">4. Krige onto a grid</a><a class="headerlink" href="#4-krige-onto-a-grid" title="Permanent link">#</a></h2>
+<p>Kriging returns a <code>KrigedSurface</code> — a 2-band <code>Dataset</code> (band 0 estimate, band 1 variance).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">surface</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;rain&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;kriging&quot;</span><span class="p">,</span> <span class="n">variogram</span><span class="o">=</span><span class="n">vg</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">32</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># equivalently: surface = samples.krige(&quot;rain&quot;, vg, cell_size=1000, n_neighbors=32)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">surface</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s2">&quot;rain.tif&quot;</span><span class="p">)</span>                     <span class="c1"># 2-band GeoTIFF, self-describing (GS_* metadata tags)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">variance</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">variance</span>                     <span class="c1"># band 1 as a Dataset — the reason to prefer kriging over IDW</span>
+</code></pre></div>
+<p>You can pass a model <strong>name</strong> instead of a fitted <code>Variogram</code> to auto-fit it internally
+(<code>variogram="spherical"</code>), or an existing <code>Dataset</code> as a <code>template=</code> to align the output grid cell-for-cell.</p>
+<h2 id="5-validate-honestly-leave-one-out"><a class="toclink" href="#5-validate-honestly-leave-one-out">5. Validate honestly — leave-one-out</a><a class="headerlink" href="#5-validate-honestly-leave-one-out" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">cv</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="s2">&quot;rain&quot;</span><span class="p">,</span> <span class="n">vg</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">cv</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span>                             <span class="c1"># ME, RMSE, mean/standardized error, correlation</span>
+</code></pre></div>
+<p>For a well-specified variogram the mean standardized error is ≈ 0 and the standardized RMSE ≈ 1.</p>
+<h2 id="where-idw-lives"><a class="toclink" href="#where-idw-lives">Where IDW lives</a><a class="headerlink" href="#where-idw-lives" title="Permanent link">#</a></h2>
+<p><code>Samples.interpolate_to_raster("rain", method="idw")</code> delegates to pyramids' <code>gdal.Grid</code> IDW — geostatista only owns
+the kriging path (see <a href="../../adr/0001-pyramids-geostatista-boundary/">ADR 0001</a>).</p>
 
 
 
@@ -1349,7 +1426,7 @@ project.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../CODE_OF_CONDUCT/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Code of Conduct">
+          <a href="../../installation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1359,20 +1436,20 @@ project.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Code of Conduct
+                Installation
               </div>
             </div>
           </a>
         
         
           
-          <a href="../LICENSE/" class="md-footer__link md-footer__link--next" aria-label="Next: License">
+          <a href="../spatial-autocorrelation/" class="md-footer__link md-footer__link--next" aria-label="Next: Spatial autocorrelation">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                License
+                Spatial autocorrelation
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1425,14 +1502,14 @@ project.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "search.highlight", "search.suggest", "toc.follow", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike", "version_selector": true}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tooltips", "search.highlight", "search.suggest", "toc.follow", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike", "version_selector": true}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
-        <script src="../assets/javascripts/panzoom.min.js"></script>
+        <script src="../../assets/javascripts/panzoom.min.js"></script>
       
-        <script src="../assets/javascripts/zoompan.js"></script>
+        <script src="../../assets/javascripts/zoompan.js"></script>
       
     
   </body>

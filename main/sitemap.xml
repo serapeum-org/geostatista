@@ -2,30 +2,70 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://serapeum-org.github.io/geostatista/main/</loc>
-         <lastmod>2026-07-17</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://serapeum-org.github.io/geostatista/main/CODE_OF_CONDUCT/</loc>
-         <lastmod>2026-07-17</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://serapeum-org.github.io/geostatista/main/LICENSE/</loc>
-         <lastmod>2026-07-17</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://serapeum-org.github.io/geostatista/main/change-log/</loc>
-         <lastmod>2026-07-17</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://serapeum-org.github.io/geostatista/main/contributing/</loc>
-         <lastmod>2026-07-17</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://serapeum-org.github.io/geostatista/main/installation/</loc>
-         <lastmod>2026-07-17</lastmod>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/adr/0001-pyramids-geostatista-boundary/</loc>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/examples/01_kriging_workflow/</loc>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/examples/02_spatial_autocorrelation/</loc>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/guides/kriging-workflow/</loc>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/guides/spatial-autocorrelation/</loc>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/reference/autocorrelation/</loc>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/reference/kriging/</loc>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/reference/samples/</loc>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://serapeum-org.github.io/geostatista/main/reference/tools/</loc>
-         <lastmod>2026-07-17</lastmod>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/reference/variogram/</loc>
+         <lastmod>2026-07-18</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/geostatista/main/reference/weights/</loc>
+         <lastmod>2026-07-18</lastmod>
     </url>
 </urlset>
