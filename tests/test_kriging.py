@@ -163,6 +163,22 @@ def test_band_datasets_preserve_nodata():
     assert surface.estimate.no_data_value[0] == -1234.0
 
 
+def test_idw_delegates_to_pyramids():
+    from pyramids.dataset import Dataset
+
+    s = make_samples(30)
+    surface = s.interpolate_to_raster("z", method="idw", cell_size=10.0)  # non-kriging -> pyramids gdal.Grid
+    assert isinstance(surface, Dataset)
+    assert surface.band_count == 1                                   # IDW is single-band (no variance)
+
+
+def test_krige_with_string_variogram_autofits():
+    s = make_samples(50)
+    surface = s.krige("z", "spherical", cell_size=10.0)             # string model name -> internal auto-fit
+    assert isinstance(surface, KrigedSurface)
+    assert surface.band_count == 2 and surface.model == "spherical"
+
+
 def test_surface_roundtrip(tmp_path):
     s = make_samples(40)
     vg = fitted_variogram(s)
