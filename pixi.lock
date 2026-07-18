@@ -5530,8 +5530,8 @@ packages:
   timestamp: 1761593910217
 - pypi: ./
   name: geostatista
-  version: 0.1.6
-  sha256: efbf6cf3f4a6430632bb1a7fb4646d8890b3c7cf256d8c81d2271594b9019126
+  version: 0.2.0
+  sha256: e970960231e88eea65b4b1f18adc1aad314600af34e0616b1b7c5fcf4a1c276c
   requires_dist:
   - numpy>=2.0.0
   - scipy>=1.10.0
