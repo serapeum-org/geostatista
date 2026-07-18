@@ -20,15 +20,33 @@ except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 
 from . import models
+from .autocorrelation import (
+    gearys_c,
+    getis_ord_gi,
+    hotspots,
+    local_morans,
+    morans_i,
+    spatial_autocorrelation,
+)
 from .kriging import OrdinaryKriging
 from .samples import Samples
 from .surface import KrigedSurface
 from .variogram import Variogram
+from .weights import Weights
 
 __all__ = [
+    # kriging
     "Samples",
     "Variogram",
     "KrigedSurface",
     "OrdinaryKriging",
     "models",
+    # spatial autocorrelation
+    "Weights",
+    "morans_i",
+    "gearys_c",
+    "local_morans",
+    "getis_ord_gi",
+    "spatial_autocorrelation",
+    "hotspots",
 ]
