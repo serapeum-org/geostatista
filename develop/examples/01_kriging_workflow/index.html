@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -2184,7 +2184,7 @@ samples.head()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026-07-18 19:44:15 | <span class="ansi-green-fg">INFO</span> | pyramids.base.config | Logging is configured.
+<pre>2026-07-18 19:52:17 | <span class="ansi-green-fg">INFO</span> | pyramids.base.config | Logging is configured.
 </pre>
 </div>
 </div>
@@ -2878,7 +2878,7 @@ delegates to pyramids — see <a href="../adr/0001-pyramids-geostatista-boundary
 
 <span class="c1"># (b) align a new kriging to the grid of an existing Dataset</span>
 <span class="n">aligned</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">krige</span><span class="p">(</span><span class="s2">"rain"</span><span class="p">,</span> <span class="n">vg</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="n">surface</span><span class="o">.</span><span class="n">estimate</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"template-aligned :"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">aligned</span><span class="o">.</span><span class="n">read_array</span><span class="p">())</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">"=="</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"template-aligned grid :"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">aligned</span><span class="o">.</span><span class="n">read_array</span><span class="p">())</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s2">"=="</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
 <span class="c1"># (c) inverse-distance weighting instead of kriging (single band, no variance)</span>
 <span class="n">idw</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span><span class="s2">"rain"</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"idw"</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
@@ -2890,7 +2890,7 @@ print("auto-fit surface :", auto.model, " bands :", auto.band_count)
 
 # (b) align a new kriging to the grid of an existing Dataset
 aligned = samples.krige("rain", vg, template=surface.estimate)
-print("template-aligned :", np.asarray(aligned.read_array()).shape, "==", arr.shape[1:])
+print("template-aligned grid :", np.asarray(aligned.read_array()).shape[1:], "==", arr.shape[1:])
 
 # (c) inverse-distance weighting instead of kriging (single band, no variance)
 idw = samples.interpolate_to_raster("rain", method="idw", cell_size=5.0)
@@ -2907,7 +2907,7 @@ print("idw surface bands :", idw.band_count)</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>auto-fit surface : exponential  bands : 2
-template-aligned : (2, 20, 20) == (20, 20)
+template-aligned grid : (20, 20) == (20, 20)
 idw surface bands : 1
 </pre>
 </div>
