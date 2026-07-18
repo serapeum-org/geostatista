@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -2103,13 +2103,13 @@ and the standardization uses the leave-one-out moments over the other <code>n-1<
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/geostatista/autocorrelation.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-312">312</a></span>
-<span class="normal"><a href="#__codelineno-0-313">313</a></span>
-<span class="normal"><a href="#__codelineno-0-314">314</a></span>
-<span class="normal"><a href="#__codelineno-0-315">315</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-312" name="__codelineno-0-312"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_hotspots</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<a id="__codelineno-0-313" name="__codelineno-0-313"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Map the Getis-Ord Gi* `hotspot` classes — hot red, cold blue, ns neutral. Returns `(fig, ax)`.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-314" name="__codelineno-0-314"></a>    <span class="n">codes</span> <span class="o">=</span> <span class="n">fc</span><span class="p">[</span><span class="s2">&quot;hotspot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_HOTSPOT_ORDINAL</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<a id="__codelineno-0-315" name="__codelineno-0-315"></a>    <span class="k">return</span> <span class="n">_class_choropleth</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">codes</span><span class="p">,</span> <span class="s2">&quot;Getis-Ord Gi* hotspots&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-317">317</a></span>
+<span class="normal"><a href="#__codelineno-0-318">318</a></span>
+<span class="normal"><a href="#__codelineno-0-319">319</a></span>
+<span class="normal"><a href="#__codelineno-0-320">320</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-317" name="__codelineno-0-317"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_hotspots</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-0-318" name="__codelineno-0-318"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Map the Getis-Ord Gi* `hotspot` classes — hot red, cold blue, ns neutral. Returns `(fig, ax)`.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-319" name="__codelineno-0-319"></a>    <span class="n">codes</span> <span class="o">=</span> <span class="n">fc</span><span class="p">[</span><span class="s2">&quot;hotspot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_HOTSPOT_ORDINAL</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<a id="__codelineno-0-320" name="__codelineno-0-320"></a>    <span class="k">return</span> <span class="n">_class_choropleth</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">codes</span><span class="p">,</span> <span class="s2">&quot;Getis-Ord Gi* hotspots&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2128,6 +2128,9 @@ and the standardization uses the leave-one-out moments over the other <code>n-1<
     <div class="doc doc-contents ">
 
         <p>Map the Local Moran (LISA) <code>cluster</code> classes — HH red … LL blue, ns neutral. Returns <code>(fig, ax)</code>.</p>
+<p>The classes are placed on a diverging ordinal scale (HH=+2, HL=+1, LH=-1, LL=-2, ns=0), so the HL/LH spatial
+<em>outliers</em> share the warm/cool hue family with the HH/LL <em>clusters</em> rather than getting distinct categorical
+colours. This reads as a hot-to-cold gradient; use <code>fc["cluster"]</code> directly if you need the nominal classes.</p>
 
 
             <details class="mkdocstrings-source">
@@ -2135,10 +2138,20 @@ and the standardization uses the leave-one-out moments over the other <code>n-1<
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-306">306</a></span>
 <span class="normal"><a href="#__codelineno-0-307">307</a></span>
 <span class="normal"><a href="#__codelineno-0-308">308</a></span>
-<span class="normal"><a href="#__codelineno-0-309">309</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-306" name="__codelineno-0-306"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_lisa</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<a id="__codelineno-0-307" name="__codelineno-0-307"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Map the Local Moran (LISA) `cluster` classes — HH red … LL blue, ns neutral. Returns `(fig, ax)`.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-308" name="__codelineno-0-308"></a>    <span class="n">codes</span> <span class="o">=</span> <span class="n">fc</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_CLUSTER_ORDINAL</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<a id="__codelineno-0-309" name="__codelineno-0-309"></a>    <span class="k">return</span> <span class="n">_class_choropleth</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">codes</span><span class="p">,</span> <span class="s2">&quot;LISA clusters&quot;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-309">309</a></span>
+<span class="normal"><a href="#__codelineno-0-310">310</a></span>
+<span class="normal"><a href="#__codelineno-0-311">311</a></span>
+<span class="normal"><a href="#__codelineno-0-312">312</a></span>
+<span class="normal"><a href="#__codelineno-0-313">313</a></span>
+<span class="normal"><a href="#__codelineno-0-314">314</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-306" name="__codelineno-0-306"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_lisa</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-0-307" name="__codelineno-0-307"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Map the Local Moran (LISA) `cluster` classes — HH red … LL blue, ns neutral. Returns `(fig, ax)`.</span>
+<a id="__codelineno-0-308" name="__codelineno-0-308"></a>
+<a id="__codelineno-0-309" name="__codelineno-0-309"></a><span class="sd">    The classes are placed on a diverging ordinal scale (HH=+2, HL=+1, LH=-1, LL=-2, ns=0), so the HL/LH spatial</span>
+<a id="__codelineno-0-310" name="__codelineno-0-310"></a><span class="sd">    *outliers* share the warm/cool hue family with the HH/LL *clusters* rather than getting distinct categorical</span>
+<a id="__codelineno-0-311" name="__codelineno-0-311"></a><span class="sd">    colours. This reads as a hot-to-cold gradient; use `fc[&quot;cluster&quot;]` directly if you need the nominal classes.</span>
+<a id="__codelineno-0-312" name="__codelineno-0-312"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-313" name="__codelineno-0-313"></a>    <span class="n">codes</span> <span class="o">=</span> <span class="n">fc</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_CLUSTER_ORDINAL</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<a id="__codelineno-0-314" name="__codelineno-0-314"></a>    <span class="k">return</span> <span class="n">_class_choropleth</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">codes</span><span class="p">,</span> <span class="s2">&quot;LISA clusters&quot;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
