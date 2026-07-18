@@ -63,7 +63,7 @@ def test_knn_rejects_k_ge_n():
 
 def test_distance_band_symmetric_and_islands():
     fc = lattice(5)
-    w = Weights.distance_band(fc, 1.5)             # centroids 1 apart -> rook-like band
+    w = Weights.distance_band(fc, 1.5)             # 1.5 > diagonal (~1.414) -> queen-like band (degree 8 interior)
     diff = (w.sparse - w.sparse.T)
     assert abs(diff).sum() == 0.0                  # symmetric
     tiny = Weights.distance_band(fc, 0.1)          # nobody within 0.1 -> all islands
