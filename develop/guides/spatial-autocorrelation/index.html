@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1419,7 +1419,7 @@ choropleth of the significance classes (HH/HL warm, LL/LH cool, ns neutral):</p>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">plot_hotspots</span><span class="p">(</span><span class="n">hot</span><span class="p">)</span>      <span class="c1"># Getis-Ord Gi* hot / cold / ns map</span>
 </code></pre></div>
 <h2 id="one-call-facade"><a class="toclink" href="#one-call-facade">One-call facade</a><a class="headerlink" href="#one-call-facade" title="Permanent link">#</a></h2>
-<p>The exact surface from the roadmap (pyramids #576 Item 5):</p>
+<p>The one-call facade (origin: pyramids #576 Item 5):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geostatista</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial_autocorrelation</span><span class="p">,</span> <span class="n">hotspots</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">spatial_autocorrelation</span><span class="p">(</span><span class="n">tracts</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;queen&quot;</span><span class="p">)</span>   <span class="c1"># {&quot;I&quot;, &quot;EI&quot;, &quot;z&quot;, &quot;p&quot;, &quot;n&quot;, &quot;weights&quot;}</span>
