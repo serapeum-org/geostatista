@@ -18,3 +18,46 @@ try:
     __version__ = version(__name__)
 except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
+
+from . import models
+from ._solve.fit import VariogramFitError
+from .autocorrelation import (
+    GearyResult,
+    MoranResult,
+    gearys_c,
+    getis_ord_gi,
+    hotspots,
+    local_morans,
+    morans_i,
+    plot_hotspots,
+    plot_lisa,
+    spatial_autocorrelation,
+)
+from .kriging import OrdinaryKriging
+from .samples import Samples
+from .surface import KrigedSurface
+from .variogram import Variogram, empirical_variogram
+from .weights import Weights
+
+__all__ = [
+    # kriging
+    "Samples",
+    "Variogram",
+    "empirical_variogram",
+    "VariogramFitError",
+    "KrigedSurface",
+    "OrdinaryKriging",
+    "models",
+    # spatial autocorrelation
+    "Weights",
+    "morans_i",
+    "gearys_c",
+    "local_morans",
+    "getis_ord_gi",
+    "spatial_autocorrelation",
+    "hotspots",
+    "plot_lisa",
+    "plot_hotspots",
+    "MoranResult",
+    "GearyResult",
+]

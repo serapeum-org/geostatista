@@ -106,9 +106,21 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Installation: installation.md
+  - Guides:
+    - Kriging workflow: guides/kriging-workflow.md
+    - Spatial autocorrelation: guides/spatial-autocorrelation.md
+  - Examples:
+    - Kriging workflow: examples/01_kriging_workflow.ipynb
+    - Spatial autocorrelation: examples/02_spatial_autocorrelation.ipynb
   - Reference:
-    - Tools: reference/tools.md
+    - Samples: reference/samples.md
+    - Variogram & models: reference/variogram.md
+    - Kriging: reference/kriging.md
+    - Weights: reference/weights.md
+    - Spatial autocorrelation: reference/autocorrelation.md
+    - Tools (legacy): reference/tools.md
   - About:
+    - Design — pyramids boundary (ADR): adr/0001-pyramids-geostatista-boundary.md
     - Change-log: change-log.md
     - Code of Conduct: CODE_OF_CONDUCT.md
     - Contributing: contributing.md
