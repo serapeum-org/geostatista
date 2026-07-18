@@ -62,7 +62,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -767,6 +767,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="examples/03_variogram_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram models &amp; estimators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1312,10 +1340,17 @@ statistics. It is built on top of
 <a href="https://github.com/serapeum-org/pyramids">pyramids</a> and its GDAL stack.</p>
 <h2 id="main-features"><a class="toclink" href="#main-features">Main Features</a><a class="headerlink" href="#main-features" title="Permanent link">#</a></h2>
 <ul>
-<li>Spatial interpolation via inverse-distance weighting (IDW/ISDW).</li>
-<li>Roadmap: empirical variograms, model fitting, ordinary kriging with a variance
-  band, leave-one-out cross-validation, and (later) a spatial-weights subsystem for
-  Moran's I / Getis-Ord Gi*.</li>
+<li><strong>Variograms</strong> — empirical variogram clouds (Matheron / Cressie estimators) and
+  fitted theoretical models (<code>spherical</code>, <code>exponential</code>, <code>gaussian</code>, <code>matern</code>).</li>
+<li><strong>Ordinary kriging</strong> — onto a regular grid, returning a 2-band <code>KrigedSurface</code>
+  (band 0 = estimate, band 1 = kriging variance) with a moving neighborhood for
+  large sample sets.</li>
+<li><strong>Leave-one-out cross-validation</strong> of the kriged surface (ME / RMSE / standardized
+  error).</li>
+<li><strong>Spatial autocorrelation</strong> — a sparse <code>Weights</code> matrix (queen / rook / k-nearest /
+  distance-band) feeding global (Moran's I, Geary's C) and local (Local Moran / LISA,
+  Getis-Ord Gi*) statistics.</li>
+<li><strong>Plotting</strong> — variogram, LISA, and hotspot maps through cleopatra (the <code>viz</code> extra).</li>
 </ul>
 <h2 id="installation"><a class="toclink" href="#installation">Installation</a><a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
 <ul>
@@ -1335,13 +1370,31 @@ statistics. It is built on top of
 </code></pre></div>
 <p>See <a href="installation/">Installation</a> for the full guide.</p>
 <h2 id="quick-start"><a class="toclink" href="#quick-start">Quick start</a><a class="headerlink" href="#quick-start" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">geostatista</span>
+<p>Krige scattered point observations onto a grid, with an uncertainty band:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geostatista</span><span class="w"> </span><span class="kn">import</span> <span class="n">Samples</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">geostatista</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">samples</span> <span class="o">=</span> <span class="n">Samples</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;rain_gauges.geojson&quot;</span><span class="p">)</span>   <span class="c1"># a Samples is-a FeatureCollection</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">vg</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">variogram</span><span class="p">(</span><span class="s2">&quot;rain&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;spherical&quot;</span><span class="p">)</span>   <span class="c1"># explore + fit spatial structure</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">surface</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">krige</span><span class="p">(</span><span class="s2">&quot;rain&quot;</span><span class="p">,</span> <span class="n">vg</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>      <span class="c1"># 2-band KrigedSurface (estimate + variance)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">surface</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s2">&quot;rain.tif&quot;</span><span class="p">)</span>                              <span class="c1"># self-describing GeoTIFF (GS_* tags)</span>
+</code></pre></div>
+<p>Measure spatial autocorrelation over polygon features:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geostatista</span><span class="w"> </span><span class="kn">import</span> <span class="n">Weights</span><span class="p">,</span> <span class="n">morans_i</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">w</span> <span class="o">=</span> <span class="n">Weights</span><span class="o">.</span><span class="n">queen</span><span class="p">(</span><span class="n">tracts</span><span class="p">)</span>          <span class="c1"># queen-contiguity weights</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">morans_i</span><span class="p">(</span><span class="n">tracts</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>      <span class="c1"># global Moran&#39;s I (I, EI, z, p)</span>
 </code></pre></div>
 <h2 id="next-steps"><a class="toclink" href="#next-steps">Next steps</a><a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
 <ul>
-<li>Browse the <a href="reference/tools/">API Reference</a>.</li>
+<li>Follow the <a href="guides/kriging-workflow/">kriging workflow guide</a> or the
+  <a href="guides/spatial-autocorrelation/">spatial-autocorrelation guide</a>.</li>
+<li>Run the example notebooks: <a href="examples/01_kriging_workflow/">kriging workflow</a>,
+  <a href="examples/02_spatial_autocorrelation/">spatial autocorrelation</a>.</li>
+<li>Browse the API reference: <a href="reference/samples/">Samples</a>,
+  <a href="reference/variogram/">Variogram &amp; models</a>, <a href="reference/kriging/">Kriging</a>,
+  <a href="reference/weights/">Weights</a>,
+  <a href="reference/autocorrelation/">Spatial autocorrelation</a>.</li>
 <li>Read the <a href="change-log/">Change log</a>.</li>
 </ul>
 

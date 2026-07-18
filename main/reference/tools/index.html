@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -665,6 +665,34 @@
     
   
     Spatial autocorrelation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/03_variogram_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram models &amp; estimators
   
 
     
@@ -1298,8 +1326,10 @@
 
 <h1 id="tools"><a class="toclink" href="#tools">Tools</a><a class="headerlink" href="#tools" title="Permanent link">#</a></h1>
 <p>Legacy spatial-interpolation helpers (inverse-distance weighting). These are slated
-for replacement by pyramids' <code>FeatureCollection.interpolate_to_raster(method="idw")</code>
-and the kriging surface described in the roadmap; see <code>planning/architecture.md</code>.</p>
+for removal — use pyramids' <code>FeatureCollection.interpolate_to_raster(method="idw")</code>
+for IDW, and <a href="../samples/"><code>Samples.krige</code></a> / the <a href="../kriging/">kriging engine</a> for the
+kriging surface with its variance band. See
+<a href="../../adr/0001-pyramids-geostatista-boundary/">ADR 0001</a> for the boundary rationale.</p>
 
 
 <div class="doc doc-object doc-class">

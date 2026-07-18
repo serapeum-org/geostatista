@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -653,6 +653,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#5-map-the-clusters-and-hotspots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Map the clusters and hotspots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#one-call-facade" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -772,6 +783,34 @@
     
   
     Spatial autocorrelation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/03_variogram_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram models &amp; estimators
   
 
     
@@ -1285,6 +1324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#5-map-the-clusters-and-hotspots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Map the clusters and hotspots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#one-call-facade" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1360,12 +1410,20 @@ Islands (zero-neighbor features) are detected and keep a zero row under row-stan
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">hot</span> <span class="o">=</span> <span class="n">getis_ord_gi</span><span class="p">(</span><span class="n">tracts</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">star</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># + gi / z / p / hotspot (hot/cold/ns)</span>
 </code></pre></div>
-<h2 id="one-call-facade"><a class="toclink" href="#one-call-facade">One-call facade</a><a class="headerlink" href="#one-call-facade" title="Permanent link">#</a></h2>
-<p>The exact surface from the roadmap (pyramids #576 Item 5):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geostatista</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial_autocorrelation</span><span class="p">,</span> <span class="n">hotspots</span>
+<h2 id="5-map-the-clusters-and-hotspots"><a class="toclink" href="#5-map-the-clusters-and-hotspots">5. Map the clusters and hotspots</a><a class="headerlink" href="#5-map-the-clusters-and-hotspots" title="Permanent link">#</a></h2>
+<p>With the <code>viz</code> extra installed, the annotated <code>FeatureCollection</code> maps directly through cleopatra — a diverging
+choropleth of the significance classes (HH/HL warm, LL/LH cool, ns neutral):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geostatista</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_lisa</span><span class="p">,</span> <span class="n">plot_hotspots</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">spatial_autocorrelation</span><span class="p">(</span><span class="n">tracts</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;queen&quot;</span><span class="p">)</span>   <span class="c1"># {&quot;I&quot;, &quot;EI&quot;, &quot;z&quot;, &quot;p&quot;, &quot;n&quot;, &quot;weights&quot;}</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">hotspots</span><span class="p">(</span><span class="n">tracts</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;queen&quot;</span><span class="p">)</span>                   <span class="c1"># annotated FeatureCollection (Gi*)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">plot_lisa</span><span class="p">(</span><span class="n">lisa</span><span class="p">)</span>         <span class="c1"># LISA cluster map (HH / LL / HL / LH / ns)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">plot_hotspots</span><span class="p">(</span><span class="n">hot</span><span class="p">)</span>      <span class="c1"># Getis-Ord Gi* hot / cold / ns map</span>
+</code></pre></div>
+<h2 id="one-call-facade"><a class="toclink" href="#one-call-facade">One-call facade</a><a class="headerlink" href="#one-call-facade" title="Permanent link">#</a></h2>
+<p>The one-call facade (origin: pyramids #576 Item 5):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geostatista</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial_autocorrelation</span><span class="p">,</span> <span class="n">hotspots</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">spatial_autocorrelation</span><span class="p">(</span><span class="n">tracts</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;queen&quot;</span><span class="p">)</span>   <span class="c1"># {&quot;I&quot;, &quot;EI&quot;, &quot;z&quot;, &quot;p&quot;, &quot;n&quot;, &quot;weights&quot;}</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">hotspots</span><span class="p">(</span><span class="n">tracts</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;queen&quot;</span><span class="p">)</span>                   <span class="c1"># annotated FeatureCollection (Gi*)</span>
 </code></pre></div>
 
 
