@@ -155,6 +155,14 @@ def test_krige_to_surface():
     assert surface.model == "spherical"
 
 
+def test_band_datasets_preserve_nodata():
+    s = make_samples(30)
+    vg = fitted_variogram(s)
+    surface = s.krige("z", vg, cell_size=10.0, nodata=-1234.0)
+    assert surface.variance.no_data_value[0] == -1234.0             # not the hardcoded -9999
+    assert surface.estimate.no_data_value[0] == -1234.0
+
+
 def test_surface_roundtrip(tmp_path):
     s = make_samples(40)
     vg = fitted_variogram(s)

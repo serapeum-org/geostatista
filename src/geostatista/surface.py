@@ -60,10 +60,11 @@ class KrigedSurface(Dataset):
         return surface
 
     def _band(self, index: int) -> Dataset:
-        """Return band `index` as a standalone single-band `Dataset`."""
+        """Return band `index` as a standalone single-band `Dataset`, preserving the surface's own nodata."""
         array = np.asarray(self.read_array())
         band = array[index] if array.ndim == 3 else array
-        dataset = Dataset.create_from_array(band, geo=self.geotransform, epsg=self.epsg, no_data_value=-9999.0)
+        nodata = self.no_data_value[index] if self.no_data_value else -9999.0
+        dataset = Dataset.create_from_array(band, geo=self.geotransform, epsg=self.epsg, no_data_value=nodata)
         return dataset
 
     @property
