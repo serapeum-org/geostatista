@@ -58,6 +58,14 @@ def test_variogram_empirical_and_fit():
     assert float(vg.predict(0.0)) == pytest.approx(0.0)
 
 
+@pytest.mark.parametrize("model", ["spherical", "exponential", "gaussian", "matern"])
+def test_variogram_fit_sill_never_below_nugget(model):
+    """The (nugget, partial_sill>=0) reparameterization guarantees a monotone, PSD-safe model."""
+    s = make_samples(90)
+    vg = s.variogram("z", n_lags=12).fit(model)
+    assert vg.sill >= vg.nugget - 1e-9
+
+
 def test_variogram_fit_nonconvergence_is_typed():
     from geostatista._solve.fit import VariogramFitError
 

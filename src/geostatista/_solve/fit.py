@@ -29,6 +29,11 @@ def _model_callable(model_name: str):
     return func
 
 
+def _partial_sill_model(h: np.ndarray, nugget: float, partial_sill: float, rng: float, *, base) -> np.ndarray:
+    """Evaluate `base` with `sill = nugget + partial_sill` — the reparameterization curve_fit optimizes over."""
+    return base(h, nugget, nugget + partial_sill, rng)
+
+
 def fit_model(
     lags: np.ndarray, semivariance: np.ndarray, counts: np.ndarray, model_name: str
 ) -> tuple[float, float, float]:
@@ -47,6 +52,10 @@ def fit_model(
         VariogramFitError: If the least-squares fit does not converge.
     """
     func = _model_callable(model_name)
+    # Fit on (nugget, partial_sill, range) with partial_sill >= 0, so the returned sill = nugget + partial_sill is
+    # always >= nugget. Fitting (nugget, sill) with independent box bounds would let curve_fit return nugget > sill
+    # (a negative partial sill), which makes the model non-monotone and the kriging covariance non-PSD.
+    fit_func = partial(_partial_sill_model, base=func)
     valid = np.isfinite(semivariance) & (counts > 0)
     if valid.sum() < 3:
         raise VariogramFitError("fit: fewer than 3 populated lag bins — cannot fit a 3-parameter model")
@@ -62,9 +71,10 @@ def fit_model(
     sigma = 1.0 / np.sqrt(weights)
     try:
         popt, _ = curve_fit(
-            func, h, g, p0=p0, bounds=(lower, upper), sigma=sigma, absolute_sigma=False, maxfev=10000
+            fit_func, h, g, p0=p0, bounds=(lower, upper), sigma=sigma, absolute_sigma=False, maxfev=10000
         )
     except (RuntimeError, ValueError) as exc:
         raise VariogramFitError(f"fit: {model_name} model did not converge — {exc}") from exc
-    result = (float(popt[0]), float(popt[1]), float(popt[2]))
+    nugget, partial_sill, rng = float(popt[0]), float(popt[1]), float(popt[2])
+    result = (nugget, nugget + partial_sill, rng)
     return result
