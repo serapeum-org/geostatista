@@ -179,6 +179,14 @@ def test_krige_with_string_variogram_autofits():
     assert surface.band_count == 2 and surface.model == "spherical"
 
 
+def test_cressie_estimator_is_robust_to_outlier():
+    s = make_samples(80)
+    s.loc[s.index[0], "z"] = 500.0                                  # inject an outlier
+    matheron = s.variogram("z", n_lags=10, estimator="matheron")
+    cressie = s.variogram("z", n_lags=10, estimator="cressie")
+    assert np.nanmean(cressie.semivariance) < np.nanmean(matheron.semivariance)  # robust to the outlier
+
+
 def test_surface_roundtrip(tmp_path):
     s = make_samples(40)
     vg = fitted_variogram(s)
