@@ -234,11 +234,22 @@ def _build_weights(fc, weights: "Weights | str") -> Weights:
     raise ValueError(f"unknown weights spec {weights!r}")
 
 
-def spatial_autocorrelation(fc, column: str, *, weights: "Weights | str" = "queen") -> dict:
-    """One-call global Moran's I (the #576 Item-5 facade). Returns `{I, EI, z, p, n, weights}`."""
+def spatial_autocorrelation(fc, column: str, *, weights: "Weights | str" = "queen", seed: int | None = None) -> dict:
+    """One-call global Moran's I (the #576 Item-5 facade). Returns `{I, EI, z, p, n, weights}`.
+
+    `z` and `p` are the analytic (normality-based) pair, so the result is deterministic; pass `seed` to also make
+    the permutation inference inside Moran's I reproducible.
+    """
     w = _build_weights(fc, weights)
-    result = morans_i(fc, column, w)
-    return {"I": result.I, "EI": result.EI, "z": result.z_norm, "p": result.p_sim, "n": result.n, "weights": w.transform_applied}
+    result = morans_i(fc, column, w, seed=seed)
+    return {
+        "I": result.I,
+        "EI": result.EI,
+        "z": result.z_norm,
+        "p": result.p_norm,
+        "n": result.n,
+        "weights": w.transform_applied,
+    }
 
 
 def hotspots(fc, column: str, *, weights: "Weights | str" = "queen"):

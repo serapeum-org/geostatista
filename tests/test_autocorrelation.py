@@ -152,6 +152,7 @@ def test_facade_functions():
     summary = spatial_autocorrelation(fc, "v", weights="queen")
     assert set(summary) == {"I", "EI", "z", "p", "n", "weights"}
     assert summary["n"] == 25
+    assert summary == spatial_autocorrelation(fc, "v", weights="queen")   # deterministic (analytic z/p)
     hot = hotspots(fc, "block", weights="queen")
     assert isinstance(hot, FeatureCollection)
     assert "hotspot" in hot.columns
