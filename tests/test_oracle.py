@@ -10,7 +10,7 @@ import pytest
 from pyramids.feature import FeatureCollection
 from shapely.geometry import Point, box
 
-from geostatista import Variogram, Weights, getis_ord_gi, local_morans, morans_i
+from geostatista import Variogram, Weights, gearys_c, getis_ord_gi, local_morans, morans_i
 from geostatista.kriging import OrdinaryKriging
 
 pytestmark = pytest.mark.oracle
@@ -39,6 +39,20 @@ def test_morans_i_matches_esda():
     assert mine.I == pytest.approx(reference.I, rel=1e-6)
     assert mine.EI == pytest.approx(reference.EI, rel=1e-9)
     assert mine.z_norm == pytest.approx(reference.z_norm, rel=1e-3)
+
+
+def test_gearys_c_matches_esda():
+    esda = pytest.importorskip("esda")
+    libpysal = pytest.importorskip("libpysal")
+    gdf = _lattice()
+    fc = FeatureCollection(gdf)
+
+    w_lp = libpysal.weights.Queen.from_dataframe(gdf, use_index=False)
+    w_lp.transform = "r"                                    # match our row-standardized default
+    reference = esda.Geary(gdf["v"].to_numpy(), w_lp, permutations=0)
+
+    mine = gearys_c(fc, "v", Weights.queen(fc), permutations=99, seed=0)
+    assert mine.C == pytest.approx(reference.C, rel=1e-6)
 
 
 def test_local_morans_matches_esda():

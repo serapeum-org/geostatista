@@ -116,9 +116,9 @@ def _geary_c(values: np.ndarray, row: np.ndarray, col: np.ndarray, data: np.ndar
     return (n - 1) * numer / (2.0 * s0 * z2)
 
 
-def gearys_c(fc, column: str, w: Weights, *, permutations: int = 999, seed: int | None = None) -> GearyResult:
-    """Global Geary's C of `column` under weights `w`."""
-    matrix = w.sparse
+def gearys_c(fc, column: str, w: Weights, *, permutations: int = 999, transform: str = "r", seed: int | None = None) -> GearyResult:
+    """Global Geary's C of `column` under weights `w` (row-standardized by default, consistent with `morans_i`)."""
+    matrix = w.transform(transform).sparse
     x = fc[column].to_numpy(dtype=float)
     n = len(x)
     z2 = float(((x - x.mean()) ** 2).sum())
