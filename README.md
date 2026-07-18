@@ -31,8 +31,8 @@ estimate, or per-feature autocorrelation statistics.
 - **Validation** — leave-one-out cross-validation with ME / RMSE / standardized-error
   diagnostics.
 - **Spatial autocorrelation** — a sparse `Weights` matrix (queen / rook contiguity,
-  k-nearest, distance-band) feeding global Moran's I and Geary's C, and local
-  Local Moran (LISA) and Getis-Ord Gi* statistics, with one-call
+  k-nearest, distance-band) feeding global (Moran's I, Geary's C) and local
+  (Local Moran / LISA, Getis-Ord Gi*) statistics, with one-call
   `spatial_autocorrelation` / `hotspots` facades.
 - **Plotting** — variogram, LISA-cluster, and hotspot maps through
   [cleopatra](https://github.com/serapeum-org/cleopatra) (the `viz` extra).

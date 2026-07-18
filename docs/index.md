@@ -22,8 +22,8 @@ statistics. It is built on top of
 - **Leave-one-out cross-validation** of the kriged surface (ME / RMSE / standardized
   error).
 - **Spatial autocorrelation** — a sparse `Weights` matrix (queen / rook / k-nearest /
-  distance-band) feeding global Moran's I and Geary's C, and local Local Moran (LISA)
-  and Getis-Ord Gi* statistics.
+  distance-band) feeding global (Moran's I, Geary's C) and local (Local Moran / LISA,
+  Getis-Ord Gi*) statistics.
 - **Plotting** — variogram, LISA, and hotspot maps through cleopatra (the `viz` extra).
 
 ## Installation
