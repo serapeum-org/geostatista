@@ -1008,6 +1008,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#geostatista.autocorrelation.plot_hotspots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plot_hotspots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geostatista.autocorrelation.plot_lisa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plot_lisa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#geostatista.autocorrelation.spatial_autocorrelation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1373,6 +1395,28 @@
     <span class="md-ellipsis">
       
         morans_i
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geostatista.autocorrelation.plot_hotspots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plot_hotspots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geostatista.autocorrelation.plot_lisa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plot_lisa
       
     </span>
   </a>
@@ -1996,6 +2040,64 @@ stats return the input features annotated with per-feature inference (z / p / cl
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="n">p_sim</span> <span class="o">=</span> <span class="n">_folded_p</span><span class="p">(</span><span class="n">sims</span><span class="p">,</span> <span class="n">moran</span><span class="p">,</span> <span class="n">permutations</span><span class="p">)</span>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="n">z_sim</span> <span class="o">=</span> <span class="p">(</span><span class="n">moran</span> <span class="o">-</span> <span class="n">sims</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">sims</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="k">return</span> <span class="n">MoranResult</span><span class="p">(</span><span class="n">moran</span><span class="p">,</span> <span class="n">expected</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">z_norm</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">p_norm</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">z_sim</span><span class="p">),</span> <span class="n">p_sim</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">permutations</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">transform_applied</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="geostatista.autocorrelation.plot_hotspots" class="doc doc-heading"><a href="#geostatista.autocorrelation.plot_hotspots" class="toclink">
+            <code class="highlight language-python"><span class="n">plot_hotspots</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</a><a href="#geostatista.autocorrelation.plot_hotspots" class="headerlink" title="Permanent link">#</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Map the Getis-Ord Gi* <code>hotspot</code> classes — hot red, cold blue, ns neutral. Returns <code>(fig, ax)</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/geostatista/autocorrelation.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-269">269</a></span>
+<span class="normal"><a href="#__codelineno-0-270">270</a></span>
+<span class="normal"><a href="#__codelineno-0-271">271</a></span>
+<span class="normal"><a href="#__codelineno-0-272">272</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_hotspots</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Map the Getis-Ord Gi* `hotspot` classes — hot red, cold blue, ns neutral. Returns `(fig, ax)`.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-271" name="__codelineno-0-271"></a>    <span class="n">codes</span> <span class="o">=</span> <span class="n">fc</span><span class="p">[</span><span class="s2">&quot;hotspot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_HOTSPOT_ORDINAL</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<a id="__codelineno-0-272" name="__codelineno-0-272"></a>    <span class="k">return</span> <span class="n">_class_choropleth</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">codes</span><span class="p">,</span> <span class="s2">&quot;Getis-Ord Gi* hotspots&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="geostatista.autocorrelation.plot_lisa" class="doc doc-heading"><a href="#geostatista.autocorrelation.plot_lisa" class="toclink">
+            <code class="highlight language-python"><span class="n">plot_lisa</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</a><a href="#geostatista.autocorrelation.plot_lisa" class="headerlink" title="Permanent link">#</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Map the Local Moran (LISA) <code>cluster</code> classes — HH red … LL blue, ns neutral. Returns <code>(fig, ax)</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/geostatista/autocorrelation.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#__codelineno-0-266">266</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_lisa</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Map the Local Moran (LISA) `cluster` classes — HH red … LL blue, ns neutral. Returns `(fig, ax)`.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>    <span class="n">codes</span> <span class="o">=</span> <span class="n">fc</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_CLUSTER_ORDINAL</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a>    <span class="k">return</span> <span class="n">_class_choropleth</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">codes</span><span class="p">,</span> <span class="s2">&quot;LISA clusters&quot;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
