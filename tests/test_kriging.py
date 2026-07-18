@@ -171,6 +171,21 @@ def test_surface_roundtrip(tmp_path):
     )
 
 
+def test_surface_provenance_tags_persist(tmp_path):
+    s = make_samples(40)
+    vg = fitted_variogram(s)
+    surface = s.krige("z", vg, cell_size=10.0)
+    assert surface.meta_data.get("GS_MODEL") == "spherical"          # tagged in from_arrays
+    out = tmp_path / "prov.tif"
+    surface.to_file(str(out))
+    from pyramids.dataset import Dataset
+
+    reopened = Dataset.read_file(str(out))
+    assert reopened.meta_data.get("GS_CLASS") == "KrigedSurface"      # provenance survives the write
+    assert reopened.meta_data.get("GS_MODEL") == "spherical"
+    assert reopened.meta_data.get("GS_NEIGHBORS") == "32"
+
+
 # --- cross-validation (K6) -----------------------------------------------------
 
 def test_cross_validate():

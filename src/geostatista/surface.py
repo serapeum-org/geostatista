@@ -56,6 +56,7 @@ class KrigedSurface(Dataset):
             range_=range_,
             n_neighbors=n_neighbors,
         )
+        surface.persist_metadata()  # tag the raster so a written GeoTIFF is self-describing
         return surface
 
     def _band(self, index: int) -> Dataset:
