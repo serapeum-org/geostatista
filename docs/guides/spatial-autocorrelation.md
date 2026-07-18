@@ -47,6 +47,18 @@ from geostatista import getis_ord_gi
 hot = getis_ord_gi(tracts, "income", w, star=True)  # + gi / z / p / hotspot (hot/cold/ns)
 ```
 
+## 5. Map the clusters and hotspots
+
+With the `viz` extra installed, the annotated `FeatureCollection` maps directly through cleopatra — a diverging
+choropleth of the significance classes (HH/HL warm, LL/LH cool, ns neutral):
+
+```python
+from geostatista import plot_lisa, plot_hotspots
+
+plot_lisa(lisa)         # LISA cluster map (HH / LL / HL / LH / ns)
+plot_hotspots(hot)      # Getis-Ord Gi* hot / cold / ns map
+```
+
 ## One-call facade
 
 The exact surface from the roadmap (pyramids #576 Item 5):

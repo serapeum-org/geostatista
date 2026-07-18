@@ -112,6 +112,7 @@ nav:
   - Examples:
     - Kriging workflow: examples/01_kriging_workflow.ipynb
     - Spatial autocorrelation: examples/02_spatial_autocorrelation.ipynb
+    - Variogram models: examples/03_variogram_models.ipynb
   - Reference:
     - Samples: reference/samples.md
     - Variogram & models: reference/variogram.md
