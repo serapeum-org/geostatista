@@ -304,7 +304,12 @@ def _class_choropleth(fc, codes: np.ndarray, title: str, vabs: float, ax):
 
 
 def plot_lisa(fc, *, ax=None):
-    """Map the Local Moran (LISA) `cluster` classes — HH red … LL blue, ns neutral. Returns `(fig, ax)`."""
+    """Map the Local Moran (LISA) `cluster` classes — HH red … LL blue, ns neutral. Returns `(fig, ax)`.
+
+    The classes are placed on a diverging ordinal scale (HH=+2, HL=+1, LH=-1, LL=-2, ns=0), so the HL/LH spatial
+    *outliers* share the warm/cool hue family with the HH/LL *clusters* rather than getting distinct categorical
+    colours. This reads as a hot-to-cold gradient; use `fc["cluster"]` directly if you need the nominal classes.
+    """
     codes = fc["cluster"].map(_CLUSTER_ORDINAL).to_numpy(dtype=float)
     return _class_choropleth(fc, codes, "LISA clusters", 2.0, ax)
 
