@@ -173,19 +173,34 @@ def local_morans(fc, column: str, w: Weights, *, permutations: int = 999, alpha:
 
 
 def getis_ord_gi(fc, column: str, w: Weights, *, star: bool = True, alpha: float = 0.05):
-    """Getis-Ord Gi/Gi* — annotate `fc` with `gi`, `z`, `p`, `hotspot` (hot/cold/ns)."""
+    """Getis-Ord Gi/Gi* — annotate `fc` with `gi`, `z`, `p`, `hotspot` (hot/cold/ns).
+
+    `gi` is the Getis-Ord statistic itself (`sum_j w_ij x_j / sum_j x_j`). With `star=True` the focal feature is
+    included (Gi*) and the standardization uses the global mean/variance; with `star=False` it is excluded (Gi)
+    and the standardization uses the leave-one-out moments over the other `n-1` observations.
+    """
     x = fc[column].to_numpy(dtype=float)
     n = len(x)
+    total = float(x.sum())
+    total_sq = float((x**2).sum())
     binary = (w.sparse > 0).astype(float)
-    matrix = binary + sparse.identity(n, format="csr") if star else binary
+    matrix = (binary + sparse.identity(n, format="csr")) if star else binary
     wi = np.asarray(matrix.sum(axis=1)).ravel()
     wi2 = np.asarray(matrix.multiply(matrix).sum(axis=1)).ravel()
-    xbar = x.mean()
-    s = np.sqrt((x**2).mean() - xbar**2)
     lag = np.asarray(matrix @ x).ravel()
-    numer = lag - xbar * wi
-    denom = s * np.sqrt(np.maximum((n * wi2 - wi**2) / (n - 1), 1e-12))
-    z = numer / denom
+    if star:
+        mean = np.full(n, total / n)
+        variance = total_sq / n - mean**2
+        spread = np.sqrt(np.maximum((n * wi2 - wi**2) / (n - 1), 0.0))
+        gi = np.divide(lag, total, out=np.full(n, np.nan), where=total != 0.0)
+    else:
+        mean = (total - x) / (n - 1)
+        variance = (total_sq - x**2) / (n - 1) - mean**2
+        spread = np.sqrt(np.maximum(((n - 1) * wi2 - wi**2) / (n - 2), 0.0))
+        gi = np.divide(lag, total - x, out=np.full(n, np.nan), where=(total - x) != 0.0)
+    std = np.sqrt(np.maximum(variance, 0.0))
+    scale = std * spread
+    z = np.divide(lag - mean * wi, scale, out=np.zeros(n), where=scale > 0.0)  # guard constant/degenerate fields
     p = 2.0 * (1.0 - norm.cdf(np.abs(z)))
 
     hotspot = np.array(["ns"] * n, dtype=object)
@@ -193,7 +208,7 @@ def getis_ord_gi(fc, column: str, w: Weights, *, star: bool = True, alpha: float
     hotspot[(z < 0) & (p <= alpha)] = "cold"
 
     out = fc.copy()
-    out["gi"] = lag / np.where(wi > 0, wi, np.nan)
+    out["gi"] = gi
     out["z"] = z
     out["p"] = p
     out["hotspot"] = hotspot

@@ -120,6 +120,25 @@ def test_getis_ord_hotspot():
     assert "cold" in set(out["hotspot"])                           # low-value region is cold
 
 
+def test_getis_ord_gi_statistic_matches_definition():
+    """`gi` is the Getis-Ord ratio statistic; star includes self (denom = total), non-star excludes it."""
+    from shapely.geometry import box
+
+    # a row of three unit boxes: queen neighbors A~B, B~C (A and C are not adjacent).
+    polys = [box(0, 0, 1, 1), box(1, 0, 2, 1), box(2, 0, 3, 1)]
+    fc = FeatureCollection(gpd.GeoDataFrame({"x": [1.0, 2.0, 3.0]}, geometry=polys, crs="EPSG:32633"))
+    w = Weights.queen(fc)
+    star = getis_ord_gi(fc, "x", w, star=True)
+    # Gi* = sum_{j in N(i) U {i}} x_j / total(=6): A={A,B}=3/6, B={A,B,C}=6/6, C={B,C}=5/6
+    np.testing.assert_allclose(star["gi"].to_numpy(), [3 / 6, 6 / 6, 5 / 6], rtol=1e-9)
+    non_star = getis_ord_gi(fc, "x", w, star=False)
+    # Gi = sum_{j in N(i)} x_j / (total - x_i): A={B}=2/5, B={A,C}=4/4, C={B}=2/3
+    np.testing.assert_allclose(non_star["gi"].to_numpy(), [2 / 5, 4 / 4, 2 / 3], rtol=1e-9)
+    # the two branches standardize differently, so their z-scores differ and stay finite
+    assert np.all(np.isfinite(non_star["z"].to_numpy()))
+    assert not np.allclose(star["z"].to_numpy(), non_star["z"].to_numpy())
+
+
 # --- facade (S5) ---------------------------------------------------------------
 
 def test_facade_functions():
