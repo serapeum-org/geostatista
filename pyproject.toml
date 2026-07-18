@@ -170,6 +170,10 @@ style = [
 env = ["MPLBACKEND=Agg"]
 pythonpath = ["src"]
 testpaths = ["tests"]
+markers = [
+    "oracle: numerical-parity checks against esda/libpysal/pykrige (dev-only; skipped when the oracle library is absent)",
+    "plots: plot-rendering tests via cleopatra (skipped when the viz extra / cleopatra is absent)",
+]
 
 
 [tool.pixi.workspace]
