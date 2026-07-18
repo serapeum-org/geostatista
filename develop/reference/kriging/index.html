@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1990,7 +1990,8 @@
 <span class="normal"><a href="#__codelineno-0-84">84</a></span>
 <span class="normal"><a href="#__codelineno-0-85">85</a></span>
 <span class="normal"><a href="#__codelineno-0-86">86</a></span>
-<span class="normal"><a href="#__codelineno-0-87">87</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">KrigedSurface</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+<span class="normal"><a href="#__codelineno-0-87">87</a></span>
+<span class="normal"><a href="#__codelineno-0-88">88</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">KrigedSurface</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;A kriged surface: band 0 estimate, band 1 variance, tagged with the producing variogram.&quot;&quot;&quot;</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14"></a>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -2037,35 +2038,36 @@
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>            <span class="n">range_</span><span class="o">=</span><span class="n">range_</span><span class="p">,</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a>            <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span>
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="p">)</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="k">return</span> <span class="n">surface</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_band</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return band `index` as a standalone single-band `Dataset`.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_array</span><span class="p">())</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="n">band</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="n">array</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">create_from_array</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="n">geo</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geotransform</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epsg</span><span class="p">,</span> <span class="n">no_data_value</span><span class="o">=-</span><span class="mf">9999.0</span><span class="p">)</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="k">return</span> <span class="n">dataset</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The kriged estimate (band 0) as a single-band `Dataset`.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_band</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">variance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The kriging variance (band 1) as a single-band `Dataset` — the reason to prefer kriging over IDW.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_band</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">persist_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the variogram provenance to the raster&#39;s metadata tags (`GS_*`).&quot;&quot;&quot;</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">meta_data</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="s2">&quot;GS_CLASS&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>            <span class="s2">&quot;GS_MODEL&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">),</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>            <span class="s2">&quot;GS_NUGGET&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nugget</span><span class="p">),</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>            <span class="s2">&quot;GS_SILL&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sill</span><span class="p">),</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>            <span class="s2">&quot;GS_RANGE&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">range_</span><span class="p">),</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="s2">&quot;GS_NEIGHBORS&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">),</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>        <span class="p">}</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="n">surface</span><span class="o">.</span><span class="n">persist_metadata</span><span class="p">()</span>  <span class="c1"># tag the raster so a written GeoTIFF is self-describing</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="k">return</span> <span class="n">surface</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_band</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return band `index` as a standalone single-band `Dataset`.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_array</span><span class="p">())</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="n">band</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="n">array</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">create_from_array</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="n">geo</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geotransform</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epsg</span><span class="p">,</span> <span class="n">no_data_value</span><span class="o">=-</span><span class="mf">9999.0</span><span class="p">)</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="k">return</span> <span class="n">dataset</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The kriged estimate (band 0) as a single-band `Dataset`.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_band</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">variance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The kriging variance (band 1) as a single-band `Dataset` — the reason to prefer kriging over IDW.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_band</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">persist_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the variogram provenance to the raster&#39;s metadata tags (`GS_*`).&quot;&quot;&quot;</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">meta_data</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a>            <span class="s2">&quot;GS_CLASS&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>            <span class="s2">&quot;GS_MODEL&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">),</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>            <span class="s2">&quot;GS_NUGGET&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nugget</span><span class="p">),</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>            <span class="s2">&quot;GS_SILL&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sill</span><span class="p">),</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="s2">&quot;GS_RANGE&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">range_</span><span class="p">),</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>            <span class="s2">&quot;GS_NEIGHBORS&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">),</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>        <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -2172,7 +2174,8 @@
 <span class="normal"><a href="#__codelineno-0-56">56</a></span>
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="nd">@classmethod</span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="nd">@classmethod</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_arrays</span><span class="p">(</span>
 <a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="bp">cls</span><span class="p">,</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="n">estimate</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -2198,7 +2201,8 @@
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="n">range_</span><span class="o">=</span><span class="n">range_</span><span class="p">,</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span>
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="p">)</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="k">return</span> <span class="n">surface</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="n">surface</span><span class="o">.</span><span class="n">persist_metadata</span><span class="p">()</span>  <span class="c1"># tag the raster so a written GeoTIFF is self-describing</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="k">return</span> <span class="n">surface</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2221,8 +2225,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/geostatista/surface.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-78">78</a></span>
-<span class="normal"><a href="#__codelineno-0-79">79</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-79">79</a></span>
 <span class="normal"><a href="#__codelineno-0-80">80</a></span>
 <span class="normal"><a href="#__codelineno-0-81">81</a></span>
 <span class="normal"><a href="#__codelineno-0-82">82</a></span>
@@ -2230,16 +2233,17 @@
 <span class="normal"><a href="#__codelineno-0-84">84</a></span>
 <span class="normal"><a href="#__codelineno-0-85">85</a></span>
 <span class="normal"><a href="#__codelineno-0-86">86</a></span>
-<span class="normal"><a href="#__codelineno-0-87">87</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="k">def</span><span class="w"> </span><span class="nf">persist_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Write the variogram provenance to the raster&#39;s metadata tags (`GS_*`).&quot;&quot;&quot;</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">meta_data</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="s2">&quot;GS_CLASS&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>        <span class="s2">&quot;GS_MODEL&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">),</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>        <span class="s2">&quot;GS_NUGGET&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nugget</span><span class="p">),</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>        <span class="s2">&quot;GS_SILL&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sill</span><span class="p">),</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="s2">&quot;GS_RANGE&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">range_</span><span class="p">),</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>        <span class="s2">&quot;GS_NEIGHBORS&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">),</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="p">}</span>
+<span class="normal"><a href="#__codelineno-0-87">87</a></span>
+<span class="normal"><a href="#__codelineno-0-88">88</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="k">def</span><span class="w"> </span><span class="nf">persist_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Write the variogram provenance to the raster&#39;s metadata tags (`GS_*`).&quot;&quot;&quot;</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">meta_data</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a>        <span class="s2">&quot;GS_CLASS&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>        <span class="s2">&quot;GS_MODEL&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">),</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>        <span class="s2">&quot;GS_NUGGET&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nugget</span><span class="p">),</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="s2">&quot;GS_SILL&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sill</span><span class="p">),</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>        <span class="s2">&quot;GS_RANGE&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">range_</span><span class="p">),</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>        <span class="s2">&quot;GS_NEIGHBORS&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">),</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
