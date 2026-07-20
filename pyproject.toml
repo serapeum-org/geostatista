@@ -80,7 +80,7 @@ docs = [
     "mkdocs-table-reader-plugin  >=3.1.0",
     "mkdocs-mermaid2-plugin  >=1.2.3",
     "mkdocs-panzoom-plugin",
-    "notebook<7.0",
+    "notebook<8.0",
     # Required by the mkdocs-deploy action's notebook-execution preflight
     # (`import jupyter, nbconvert, ipykernel`) and to register the python3 kernel that
     # `jupyter nbconvert --execute` uses in CI, plus cleopatra so the plotting cells
