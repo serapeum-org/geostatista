@@ -201,6 +201,82 @@ def test_krige_onto_template_grid():
     assert surface.epsg == 32633
 
 
+# --- CRS resolution (pyramids >=0.47: `Dataset.epsg` is None for "no CRS" AND for "no EPSG code") ---
+
+def geostationary_wkt() -> str:
+    """A real projection the EPSG register does not name, so `Dataset.epsg` reports None for it."""
+    from osgeo import osr
+
+    sr = osr.SpatialReference()
+    sr.ImportFromProj4("+proj=geos +h=35785831 +lon_0=0 +datum=WGS84 +units=m +no_defs")
+    return sr.ExportToWkt()
+
+
+def template_with(epsg) -> "object":
+    """A 10x12 template raster georeferenced with `epsg` (a code, a WKT string, or None)."""
+    from pyramids.dataset import Dataset, GeoReference
+
+    return Dataset.from_array(
+        np.zeros((10, 12)), geo_ref=GeoReference(geo=(0.0, 8.0, 0.0, 100.0, 0.0, -8.0), epsg=epsg)
+    )
+
+
+def test_crs_less_template_keeps_the_samples_crs():
+    s = make_samples(40)
+    surface = s.krige("z", fitted_variogram(s), template=template_with(None))
+    assert surface.epsg == 32633                                     # template gives the grid, not the CRS
+
+
+def test_crs_less_template_keeps_an_explicit_epsg():
+    s = make_samples(40)
+    engine = OrdinaryKriging(*s._clean("t", "z"), fitted_variogram(s))
+    surface = engine.predict_grid(template=template_with(None), epsg=3857)
+    assert surface.epsg == 3857                                      # the argument is not overwritten
+
+
+def test_template_crs_wins_over_the_samples_crs():
+    s = make_samples(40)
+    surface = s.krige("z", fitted_variogram(s), template=template_with(3857))
+    assert surface.epsg == 3857                                      # a template that names a CRS decides
+
+
+def test_template_without_epsg_code_keeps_its_projection():
+    s = make_samples(40)
+    template = template_with(geostationary_wkt())
+    assert template.epsg is None and template.crs                    # a real CRS that has no EPSG code
+    surface = s.krige("z", fitted_variogram(s), template=template)
+    assert surface.epsg is None
+    assert "geos" in surface.crs.lower()                             # WKT carried through, not discarded
+
+
+def test_crs_less_samples_produce_an_unreferenced_surface():
+    rng = np.random.default_rng(0)
+    xy = rng.uniform(0.0, 100.0, (40, 2))
+    z = np.sin(xy[:, 0] / 25.0) * np.cos(xy[:, 1] / 25.0) * 10.0 + 20.0
+    s = Samples(gpd.GeoDataFrame({"z": z}, geometry=[Point(x, y) for x, y in xy], crs=None))
+    assert s._epsg() is None                                         # no CRS is not EPSG:4326
+    surface = s.krige("z", fitted_variogram(s), cell_size=10.0)
+    assert surface.epsg is None
+    assert not surface.crs                                           # WGS 84 is not invented
+
+
+@pytest.mark.parametrize("epsg", [32633, None])
+def test_bands_carry_the_surface_crs(epsg):
+    s = make_samples(40)
+    surface = s.krige("z", fitted_variogram(s), template=template_with(epsg))
+    for band in (surface.estimate, surface.variance):
+        assert band.epsg == surface.epsg
+        assert band.crs == surface.crs
+
+
+def test_bands_carry_a_projection_that_has_no_epsg_code():
+    s = make_samples(40)
+    surface = s.krige("z", fitted_variogram(s), template=template_with(geostationary_wkt()))
+    for band in (surface.estimate, surface.variance):
+        assert band.crs == surface.crs                               # not dropped by `_band`
+        assert "geos" in band.crs.lower()
+
+
 def test_predict_grid_requires_cell_size_or_template():
     s = make_samples(30)
     engine = OrdinaryKriging(*s._clean("t", "z"), fitted_variogram(s))
