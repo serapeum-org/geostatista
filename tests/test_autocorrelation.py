@@ -197,3 +197,13 @@ def test_facade_functions():
     hot = hotspots(fc, "block", weights="queen")
     assert isinstance(hot, FeatureCollection)
     assert "hotspot" in hot.columns
+
+
+def test_facade_accepts_a_prebuilt_weights_instance():
+    """The `Weights | str` facade argument takes a ready-made `Weights`, not only a named default."""
+    fc = lattice(5)
+    summary = spatial_autocorrelation(fc, "v", weights=Weights.knn(fc, 4))
+    assert summary["n"] == 25 and summary["weights"] == "b"
+    built = spatial_autocorrelation(fc, "v", weights=Weights.queen(fc))
+    assert built == spatial_autocorrelation(fc, "v", weights="queen")   # same matrix, passed either way
+    assert "hotspot" in hotspots(fc, "block", weights=Weights.queen(fc)).columns

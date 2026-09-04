@@ -9,11 +9,11 @@ from geostatista import KrigedSurface, Samples, Variogram, models
 from geostatista.kriging import OrdinaryKriging
 
 
-def make_samples(n: int = 60, seed: int = 0) -> Samples:
+def make_samples(n: int = 60, seed: int = 0, crs: str = "EPSG:32633") -> Samples:
     rng = np.random.default_rng(seed)
     xy = rng.uniform(0.0, 100.0, (n, 2))
     z = np.sin(xy[:, 0] / 25.0) * np.cos(xy[:, 1] / 25.0) * 10.0 + 20.0
-    gdf = gpd.GeoDataFrame({"z": z}, geometry=[Point(x, y) for x, y in xy], crs="EPSG:32633")
+    gdf = gpd.GeoDataFrame({"z": z}, geometry=[Point(x, y) for x, y in xy], crs=crs)
     return Samples(gdf)
 
 
@@ -260,6 +260,23 @@ def test_crs_less_samples_produce_an_unreferenced_surface():
     assert not surface.crs                                           # WGS 84 is not invented
 
 
+def test_samples_crs_without_an_epsg_code_reaches_the_surface():
+    """A sample layer on a projection the EPSG register does not name keeps that projection, not WGS 84."""
+    s = make_samples(40, crs=geostationary_wkt())
+    assert s.crs.to_epsg() is None                                   # a real CRS that has no EPSG code
+    assert isinstance(s._epsg(), str)                                # WKT specification, not the old 4326 fallback
+    surface = s.krige("z", fitted_variogram(s), cell_size=10.0)
+    assert surface.epsg is None
+    assert "geos" in surface.crs.lower()                             # the samples' projection, carried through
+
+
+def test_predict_grid_defaults_to_4326():
+    """With neither a template nor an `epsg` argument, the documented 4326 default stands."""
+    s = make_samples(30)
+    engine = OrdinaryKriging(*s._clean("t", "z"), fitted_variogram(s))
+    assert engine.predict_grid(cell_size=20.0).epsg == 4326
+
+
 @pytest.mark.parametrize("epsg", [32633, None])
 def test_bands_carry_the_surface_crs(epsg):
     s = make_samples(40)
@@ -288,6 +305,13 @@ def test_variogram_predict_before_fit_raises():
     s = make_samples(20)
     with pytest.raises(RuntimeError):
         s.variogram("z").predict(10.0)
+
+
+def test_kriging_rejects_an_unfitted_variogram():
+    """An empirical variogram that was never `.fit()` has no sill, so kriging refuses it up front."""
+    s = make_samples(20)
+    with pytest.raises(ValueError, match="must be fitted"):
+        OrdinaryKriging(*s._clean("t", "z"), s.variogram("z"))
 
 
 def test_surface_estimate_band():
