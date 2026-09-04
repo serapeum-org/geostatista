@@ -5531,7 +5531,7 @@ packages:
 - pypi: ./
   name: geostatista
   version: 0.2.0
-  sha256: 8e643674a6822140cb00ad92480d3b0a2f9eb8164460ef7285a82925f50abac8
+  sha256: 10f68b614cccf7a41af7c798d1c12e59eb63fc5cbd3d1f3e69d3b7c66e881313
   requires_dist:
   - numpy>=2.0.0
   - scipy>=1.10.0
