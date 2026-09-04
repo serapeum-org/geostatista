@@ -40,6 +40,11 @@ dependencies = [
 # Variogram + surface plots via cleopatra (pyramids' viz extra). Plotting always
 # goes through cleopatra, never matplotlib directly. cleopatra is declared
 # explicitly because geostatista imports its glyphs directly (not just via pyramids).
+# The floor is >=0.31.0 in all three places it appears (here, `dev`, `docs`) so there is
+# one number to keep in step. The direct glyph imports strictly need only >=0.30.0, where
+# the modules moved to `cleopatra.glyphs.*`; 0.31.0 is what pyramids' own `viz` extra
+# pins (`cleopatra[tiles]>=0.31.0`), so declaring it everywhere states what actually
+# gets installed rather than a lower bound the resolver can never pick.
 viz = ["pyramids-gis[viz] >=0.59.0", "cleopatra >=0.31.0"]
 # Tiled kriging over large grids via pyramids' lazy/out-of-core stack.
 distributed = ["pyramids-gis[lazy] >=0.59.0"]
