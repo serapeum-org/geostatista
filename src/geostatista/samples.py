@@ -183,7 +183,8 @@ class Samples(FeatureCollection):
         """Convenience alias for `interpolate_to_raster(column, method="kriging", ...)`.
 
         The surface inherits this layer's CRS unless `template` names one of its own; samples with no CRS
-        give an unreferenced surface.
+        give an unreferenced surface. A template naming a *different* CRS is refused rather than reprojected:
+        kriging compares its cell centres with these samples' coordinates, so both must already be in one system.
         """
         return self.interpolate_to_raster(
             column,
