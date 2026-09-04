@@ -3,6 +3,7 @@
 import numpy as np
 import geopandas as gpd
 import pytest
+from pyramids.base.crs import crs_equal
 from shapely.geometry import Point
 
 from geostatista import KrigedSurface, Samples, Variogram, models
@@ -289,13 +290,23 @@ def test_predict_grid_invents_no_crs():
     assert not surface.crs
 
 
-@pytest.mark.parametrize("epsg", [32633, None])
-def test_bands_carry_the_surface_crs(epsg):
+def test_bands_carry_the_surface_crs():
     s = make_samples(40)
-    surface = s.krige("z", fitted_variogram(s), template=template_with(epsg))
+    surface = s.krige("z", fitted_variogram(s), template=template_with(32633))
+    assert surface.epsg == 32633
     for band in (surface.estimate, surface.variance):
-        assert band.epsg == surface.epsg
-        assert band.crs == surface.crs
+        assert crs_equal(band.epsg, surface.epsg)
+        assert crs_equal(band.crs, surface.crs)
+
+
+def test_bands_of_an_unreferenced_surface_stay_unreferenced():
+    """The `_band` fix must carry an *absent* CRS through too, not just a present one."""
+    s = make_samples(40, crs=None)
+    surface = s.krige("z", fitted_variogram(s), cell_size=10.0)
+    assert surface.epsg is None and not surface.crs
+    for band in (surface.estimate, surface.variance):
+        assert band.epsg is None
+        assert not band.crs
 
 
 def test_bands_carry_a_projection_that_has_no_epsg_code():
@@ -303,7 +314,7 @@ def test_bands_carry_a_projection_that_has_no_epsg_code():
     s = make_samples(40, crs=wkt)
     surface = s.krige("z", fitted_variogram(s), template=template_with(wkt))
     for band in (surface.estimate, surface.variance):
-        assert band.crs == surface.crs                               # not dropped by `_band`
+        assert crs_equal(band.crs, surface.crs)                      # not dropped by `_band`
         assert "geos" in band.crs.lower()
 
 
