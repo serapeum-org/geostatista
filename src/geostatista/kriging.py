@@ -4,6 +4,8 @@ Loops target cells through the moving neighborhood (`_solve/neighborhood.py`) an
 (`_solve/system.py`). Coincident sample points are pre-averaged (the documented duplicate policy).
 """
 
+from typing import TYPE_CHECKING
+
 import numpy as np
 from pyramids.base.crs import crs_spec
 from scipy.spatial.distance import cdist, pdist, squareform
@@ -11,6 +13,9 @@ from scipy.spatial.distance import cdist, pdist, squareform
 from ._solve.neighborhood import Neighborhood
 from ._solve.system import solve_ordinary
 from .surface import KrigedSurface
+
+if TYPE_CHECKING:
+    from pyramids.dataset import Dataset
 
 
 def average_duplicates(coords: np.ndarray, values: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -74,7 +79,7 @@ class OrdinaryKriging:
         *,
         cell_size: float | None = None,
         bounds: tuple[float, float, float, float] | None = None,
-        template=None,
+        template: "Dataset | None" = None,
         epsg: int | str | None = None,
         nodata: float = -9999.0,
     ) -> KrigedSurface:
@@ -90,8 +95,9 @@ class OrdinaryKriging:
         """
         if template is not None:
             geo = template.geotransform
-            shape = np.asarray(template.read_array()).shape
-            nrows, ncols = shape[-2], shape[-1]
+            # `rows`/`columns` come from the raster header; `read_array()` would pull every pixel
+            # into memory purely to look at `.shape`, which defeats the point of a large template.
+            nrows, ncols = template.rows, template.columns
             minx, cell_x, top_y, cell_y = geo[0], geo[1], geo[3], -geo[5]
             xs = minx + (np.arange(ncols) + 0.5) * cell_x
             ys = top_y - (np.arange(nrows) + 0.5) * cell_y
