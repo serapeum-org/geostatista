@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -2185,12 +2185,12 @@ CRS specification string (WKT), or <code>None</code> for a deliberately ungeoref
 <a id="__codelineno-0-88" name="__codelineno-0-88"></a>
 <a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
-<a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The kriged estimate (band 0) as a single-band `Dataset`.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The kriged estimate (band 0) as a single-band `Dataset`, carrying the surface&#39;s georeference and nodata.&quot;&quot;&quot;</span>
 <a id="__codelineno-0-92" name="__codelineno-0-92"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_band</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-95" name="__codelineno-0-95"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">variance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The kriging variance (band 1) as a single-band `Dataset` — the reason to prefer kriging over IDW.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The kriging variance (band 1) as a single-band `Dataset` on the same georeference — the reason to prefer kriging over IDW.&quot;&quot;&quot;</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_band</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">persist_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -2232,7 +2232,7 @@ CRS specification string (WKT), or <code>None</code> for a deliberately ungeoref
 
     <div class="doc doc-contents ">
 
-        <p>The kriged estimate (band 0) as a single-band <code>Dataset</code>.</p>
+        <p>The kriged estimate (band 0) as a single-band <code>Dataset</code>, carrying the surface's georeference and nodata.</p>
 
     </div>
 
@@ -2254,7 +2254,7 @@ CRS specification string (WKT), or <code>None</code> for a deliberately ungeoref
 
     <div class="doc doc-contents ">
 
-        <p>The kriging variance (band 1) as a single-band <code>Dataset</code> — the reason to prefer kriging over IDW.</p>
+        <p>The kriging variance (band 1) as a single-band <code>Dataset</code> on the same georeference — the reason to prefer kriging over IDW.</p>
 
     </div>
 
