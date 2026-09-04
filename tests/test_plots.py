@@ -34,7 +34,8 @@ def test_variogram_plot_via_cleopatra():
     samples = _samples()
     vg = samples.variogram("z", n_lags=12)
     fig, ax = vg.plot()                                   # empirical scatter only
-    assert fig is not None and ax is not None
+    assert fig is not None
+    assert ax is not None
     vg.fit("spherical")
     _, ax2 = vg.plot()                                    # scatter + fitted model curve
     assert len(ax2.get_lines()) >= 1                      # the model curve is a Line2D
@@ -60,11 +61,13 @@ def test_lisa_and_hotspot_maps_via_cleopatra():
     w = Weights.queen(tracts)
     lisa = local_morans(tracts, "v", w, permutations=99, seed=0)
     fig1, ax1 = plot_lisa(lisa)
-    assert fig1 is not None and len(ax1.collections) >= 1     # the polygon collection was drawn
+    assert fig1 is not None
+    assert len(ax1.collections) >= 1                      # the polygon collection was drawn
 
     hot = getis_ord_gi(tracts, "v", w, star=True)
     fig2, ax2 = plot_hotspots(hot)
-    assert fig2 is not None and len(ax2.collections) >= 1
+    assert fig2 is not None
+    assert len(ax2.collections) >= 1
 
 
 def test_import_errors_name_the_cleopatra_version(monkeypatch):

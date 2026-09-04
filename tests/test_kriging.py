@@ -55,7 +55,9 @@ def test_variogram_empirical_and_fit():
     assert set(frame.columns) == {"lag", "semivariance", "count"}
     assert 0 < vg.counts.sum() <= 120 * 119 // 2                    # pairs within max_dist, at most all pairs
     vg.fit("spherical")
-    assert vg.nugget >= 0 and vg.sill > 0 and vg.range_ > 0
+    assert vg.nugget >= 0
+    assert vg.sill > 0
+    assert vg.range_ > 0
     assert float(vg.predict(0.0)) == pytest.approx(0.0)
 
 
@@ -126,7 +128,8 @@ def test_duplicate_points_do_not_crash():
     vg = fitted_variogram(s)
     ok = OrdinaryKriging(coords, values, vg, n_neighbors=None)
     est, var = ok.predict_point(np.array([50.0, 50.0]))
-    assert np.isfinite(est) and var >= 0.0
+    assert np.isfinite(est)
+    assert var >= 0.0
 
 
 def test_global_and_neighborhood_agree_when_n_ge_count():
@@ -177,7 +180,8 @@ def test_krige_with_string_variogram_autofits():
     s = make_samples(50)
     surface = s.krige("z", "spherical", cell_size=10.0)             # string model name -> internal auto-fit
     assert isinstance(surface, KrigedSurface)
-    assert surface.band_count == 2 and surface.model == "spherical"
+    assert surface.band_count == 2
+    assert surface.model == "spherical"
 
 
 def test_cressie_estimator_is_robust_to_outlier():

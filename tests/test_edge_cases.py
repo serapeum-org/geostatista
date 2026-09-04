@@ -37,16 +37,19 @@ def test_neighborhood_max_dist_filters():
 
 def test_solve_ordinary_singular_uses_lstsq():
     weights, var = solve_ordinary(np.array([[1.0, 1.0], [1.0, 1.0]]), np.array([0.5, 0.5]), sill=1.0)
-    assert np.isfinite(weights).all() and var >= 0.0        # rank-deficient LHS -> lstsq fallback
+    assert np.isfinite(weights).all()                      # rank-deficient LHS -> lstsq fallback
+    assert var >= 0.0
 
 
 def test_result_repr_and_summary():
     fc = _polys(4)
     w = Weights.queen(fc)
     mr = morans_i(fc, "v", w, permutations=49, seed=0)
-    assert "MoranResult" in repr(mr) and set(mr.summary()) == {"I", "EI", "z", "p_norm", "p_sim"}
+    assert "MoranResult" in repr(mr)
+    assert set(mr.summary()) == {"I", "EI", "z", "p_norm", "p_sim"}
     gr = gearys_c(fc, "v", w, permutations=49, seed=0)
-    assert "GearyResult" in repr(gr) and "C" in gr.summary()
+    assert "GearyResult" in repr(gr)
+    assert "C" in gr.summary()
 
 
 def test_build_weights_unknown_spec_raises():
@@ -101,4 +104,5 @@ def test_variogram_repr_and_empty_bins():
     # explicit max_dist + a far empty bin (four clustered points, wide range) -> zero count, NaN semivariance
     coords = np.array([[0.0, 0.0], [0.1, 0.0], [0.0, 0.1], [0.1, 0.1]])
     lags, semiv, counts = empirical_variogram(coords, np.array([1.0, 2.0, 3.0, 4.0]), n_lags=10, max_dist=5.0)
-    assert (counts == 0).any() and np.all(np.isnan(semiv[counts == 0]))
+    assert (counts == 0).any()
+    assert np.all(np.isnan(semiv[counts == 0]))
