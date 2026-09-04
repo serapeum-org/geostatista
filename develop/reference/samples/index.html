@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1634,7 +1634,17 @@
 <span class="normal"><a href="#__codelineno-0-204">204</a></span>
 <span class="normal"><a href="#__codelineno-0-205">205</a></span>
 <span class="normal"><a href="#__codelineno-0-206">206</a></span>
-<span class="normal"><a href="#__codelineno-0-207">207</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">class</span><span class="w"> </span><span class="nc">Samples</span><span class="p">(</span><span class="n">FeatureCollection</span><span class="p">):</span>
+<span class="normal"><a href="#__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">class</span><span class="w"> </span><span class="nc">Samples</span><span class="p">(</span><span class="n">FeatureCollection</span><span class="p">):</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Point observations with geostatistics methods (a `FeatureCollection` subclass).&quot;&quot;&quot;</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="nd">@property</span>
@@ -1736,94 +1746,104 @@
 <a id="__codelineno-0-117" name="__codelineno-0-117"></a>
 <a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">        The kriged surface takes its CRS from these samples, so a layer with no CRS yields an unreferenced</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="sd">        surface rather than one stamped WGS 84, and a projection the EPSG register does not name is carried</span>
-<a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">        through as WKT. A `template` supplies the grid geometry and, when it names a CRS of its own, the CRS</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">        too; a template without one contributes only its geometry. A template whose CRS disagrees</span>
-<a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">        with this layer&#39;s is refused rather than kriged, because the two coordinate sets would not</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123"></a><span class="sd">        be comparable.</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124"></a>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="sd">        Raises:</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">            ValueError: If `template` is given for a non-kriging `method`, or if its CRS differs</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">                from this layer&#39;s.</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;kriging&quot;</span><span class="p">:</span>
-<a id="__codelineno-0-130" name="__codelineno-0-130"></a>            <span class="n">coords</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">(</span><span class="s2">&quot;interpolate_to_raster&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
-<a id="__codelineno-0-131" name="__codelineno-0-131"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_check_template_crs</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
-<a id="__codelineno-0-132" name="__codelineno-0-132"></a>            <span class="n">fitted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_variogram</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">variogram</span><span class="p">)</span>
-<a id="__codelineno-0-133" name="__codelineno-0-133"></a>            <span class="n">engine</span> <span class="o">=</span> <span class="n">OrdinaryKriging</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
-<a id="__codelineno-0-134" name="__codelineno-0-134"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">predict_grid</span><span class="p">(</span>
-<a id="__codelineno-0-135" name="__codelineno-0-135"></a>                <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_epsg</span><span class="p">(),</span> <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span>
-<a id="__codelineno-0-136" name="__codelineno-0-136"></a>            <span class="p">)</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>            <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a>                <span class="n">column</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span> <span class="o">**</span><span class="n">idw_kwargs</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a>            <span class="p">)</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">return</span> <span class="n">result</span>
-<a id="__codelineno-0-142" name="__codelineno-0-142"></a>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">krige</span><span class="p">(</span>
-<a id="__codelineno-0-144" name="__codelineno-0-144"></a>        <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-145" name="__codelineno-0-145"></a>        <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-146" name="__codelineno-0-146"></a>        <span class="n">variogram</span><span class="p">:</span> <span class="s2">&quot;Variogram | str&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-147" name="__codelineno-0-147"></a>        <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-148" name="__codelineno-0-148"></a>        <span class="n">cell_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-149" name="__codelineno-0-149"></a>        <span class="n">bounds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-150" name="__codelineno-0-150"></a>        <span class="n">n_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-<a id="__codelineno-0-151" name="__codelineno-0-151"></a>        <span class="n">nodata</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9999.0</span><span class="p">,</span>
-<a id="__codelineno-0-152" name="__codelineno-0-152"></a>        <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-153" name="__codelineno-0-153"></a>    <span class="p">):</span>
-<a id="__codelineno-0-154" name="__codelineno-0-154"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convenience alias for `interpolate_to_raster(column, method=&quot;kriging&quot;, ...)`.</span>
-<a id="__codelineno-0-155" name="__codelineno-0-155"></a>
-<a id="__codelineno-0-156" name="__codelineno-0-156"></a><span class="sd">        The surface inherits this layer&#39;s CRS unless `template` names one of its own; samples with no CRS</span>
-<a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="sd">        give an unreferenced surface.</span>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-159" name="__codelineno-0-159"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a>            <span class="n">column</span><span class="p">,</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a>            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;kriging&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a>            <span class="n">variogram</span><span class="o">=</span><span class="n">variogram</span><span class="p">,</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a>            <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a>            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a>            <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span>
-<a id="__codelineno-0-166" name="__codelineno-0-166"></a>            <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a>            <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a>        <span class="p">)</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">cross_validate</span><span class="p">(</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a>        <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a>        <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-173" name="__codelineno-0-173"></a>        <span class="n">variogram</span><span class="p">:</span> <span class="s2">&quot;Variogram | str&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-174" name="__codelineno-0-174"></a>        <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-175" name="__codelineno-0-175"></a>        <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ordinary&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-176" name="__codelineno-0-176"></a>        <span class="n">n_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-<a id="__codelineno-0-177" name="__codelineno-0-177"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Leave-one-out cross-validation. Returns a per-point `DataFrame`; summary stats in `frame.attrs[&quot;summary&quot;]`.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-179" name="__codelineno-0-179"></a>        <span class="n">coords</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">(</span><span class="s2">&quot;cross_validate&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
-<a id="__codelineno-0-180" name="__codelineno-0-180"></a>        <span class="n">fitted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_variogram</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">variogram</span><span class="p">)</span>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a>        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a>        <span class="n">predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a>        <span class="n">kriging_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<a id="__codelineno-0-184" name="__codelineno-0-184"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-<a id="__codelineno-0-185" name="__codelineno-0-185"></a>            <span class="n">keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">i</span>
-<a id="__codelineno-0-186" name="__codelineno-0-186"></a>            <span class="n">engine</span> <span class="o">=</span> <span class="n">OrdinaryKriging</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a>            <span class="n">predicted</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">kriging_var</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">predict_point</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-<a id="__codelineno-0-188" name="__codelineno-0-188"></a>        <span class="n">error</span> <span class="o">=</span> <span class="n">predicted</span> <span class="o">-</span> <span class="n">values</span>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a>        <span class="n">std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">kriging_var</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kriging_var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
-<a id="__codelineno-0-190" name="__codelineno-0-190"></a>        <span class="n">standardized</span> <span class="o">=</span> <span class="n">error</span> <span class="o">/</span> <span class="n">std_dev</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a>        <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<a id="__codelineno-0-192" name="__codelineno-0-192"></a>            <span class="p">{</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a>                <span class="s2">&quot;observed&quot;</span><span class="p">:</span> <span class="n">values</span><span class="p">,</span>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a>                <span class="s2">&quot;predicted&quot;</span><span class="p">:</span> <span class="n">predicted</span><span class="p">,</span>
-<a id="__codelineno-0-195" name="__codelineno-0-195"></a>                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">error</span><span class="p">,</span>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a>                <span class="s2">&quot;kriging_variance&quot;</span><span class="p">:</span> <span class="n">kriging_var</span><span class="p">,</span>
-<a id="__codelineno-0-197" name="__codelineno-0-197"></a>                <span class="s2">&quot;standardized_error&quot;</span><span class="p">:</span> <span class="n">standardized</span><span class="p">,</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a>            <span class="p">}</span>
-<a id="__codelineno-0-199" name="__codelineno-0-199"></a>        <span class="p">)</span>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a>        <span class="n">frame</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a>            <span class="s2">&quot;ME&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="p">)),</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a>            <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="o">**</span><span class="mi">2</span><span class="p">))),</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a>            <span class="s2">&quot;mean_standardized_error&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">standardized</span><span class="p">)),</span>
-<a id="__codelineno-0-204" name="__codelineno-0-204"></a>            <span class="s2">&quot;RMSE_standardized&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">standardized</span><span class="o">**</span><span class="mi">2</span><span class="p">))),</span>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a>            <span class="s2">&quot;correlation&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">predicted</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a>        <span class="p">}</span>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a>        <span class="k">return</span> <span class="n">frame</span>
+<a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">        through as WKT. `template` is **kriging-only**: it supplies the grid geometry and, when it names</span>
+<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">        a CRS of its own, the CRS too, while a template without one contributes only its geometry. A</span>
+<a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">        template whose CRS disagrees with this layer&#39;s is refused rather than kriged, because the two</span>
+<a id="__codelineno-0-123" name="__codelineno-0-123"></a><span class="sd">        coordinate sets would not be comparable. The IDW branch has no template concept, so passing one</span>
+<a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">        there is an error rather than a silently different grid.</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">        Raises:</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">            ValueError: If `template` is given for a non-kriging `method`, or if its CRS differs</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">                from this layer&#39;s.</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130"></a>        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;kriging&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-131" name="__codelineno-0-131"></a>            <span class="n">coords</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">(</span><span class="s2">&quot;interpolate_to_raster&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_check_template_crs</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133"></a>            <span class="n">fitted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_variogram</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">variogram</span><span class="p">)</span>
+<a id="__codelineno-0-134" name="__codelineno-0-134"></a>            <span class="n">engine</span> <span class="o">=</span> <span class="n">OrdinaryKriging</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">predict_grid</span><span class="p">(</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a>                <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_epsg</span><span class="p">(),</span> <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>            <span class="p">)</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a>            <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>                    <span class="sa">f</span><span class="s2">&quot;interpolate_to_raster: template is only supported for method=&#39;kriging&#39;, not </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-142" name="__codelineno-0-142"></a>                <span class="p">)</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143"></a>            <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
+<a id="__codelineno-0-144" name="__codelineno-0-144"></a>                <span class="n">column</span><span class="p">,</span>
+<a id="__codelineno-0-145" name="__codelineno-0-145"></a>                <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+<a id="__codelineno-0-146" name="__codelineno-0-146"></a>                <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147"></a>                <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148"></a>                <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a>                <span class="o">**</span><span class="n">idw_kwargs</span><span class="p">,</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150"></a>            <span class="p">)</span>
+<a id="__codelineno-0-151" name="__codelineno-0-151"></a>        <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-0-152" name="__codelineno-0-152"></a>
+<a id="__codelineno-0-153" name="__codelineno-0-153"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">krige</span><span class="p">(</span>
+<a id="__codelineno-0-154" name="__codelineno-0-154"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-155" name="__codelineno-0-155"></a>        <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-156" name="__codelineno-0-156"></a>        <span class="n">variogram</span><span class="p">:</span> <span class="s2">&quot;Variogram | str&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a>        <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a>        <span class="n">cell_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-159" name="__codelineno-0-159"></a>        <span class="n">bounds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-160" name="__codelineno-0-160"></a>        <span class="n">n_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a>        <span class="n">nodata</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9999.0</span><span class="p">,</span>
+<a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a>    <span class="p">):</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convenience alias for `interpolate_to_raster(column, method=&quot;kriging&quot;, ...)`.</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a>
+<a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">        The surface inherits this layer&#39;s CRS unless `template` names one of its own; samples with no CRS</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">        give an unreferenced surface.</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a>            <span class="n">column</span><span class="p">,</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a>            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;kriging&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a>            <span class="n">variogram</span><span class="o">=</span><span class="n">variogram</span><span class="p">,</span>
+<a id="__codelineno-0-173" name="__codelineno-0-173"></a>            <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a>            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a>            <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a>            <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a>            <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a>        <span class="p">)</span>
+<a id="__codelineno-0-179" name="__codelineno-0-179"></a>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">cross_validate</span><span class="p">(</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a>        <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a>        <span class="n">variogram</span><span class="p">:</span> <span class="s2">&quot;Variogram | str&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a>        <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-185" name="__codelineno-0-185"></a>        <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ordinary&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-186" name="__codelineno-0-186"></a>        <span class="n">n_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Leave-one-out cross-validation. Returns a per-point `DataFrame`; summary stats in `frame.attrs[&quot;summary&quot;]`.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a>        <span class="n">coords</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">(</span><span class="s2">&quot;cross_validate&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a>        <span class="n">fitted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_variogram</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">variogram</span><span class="p">)</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a>        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a>        <span class="n">predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>        <span class="n">kriging_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a>            <span class="n">keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">i</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a>            <span class="n">engine</span> <span class="o">=</span> <span class="n">OrdinaryKriging</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a>            <span class="n">predicted</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">kriging_var</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">predict_point</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>        <span class="n">error</span> <span class="o">=</span> <span class="n">predicted</span> <span class="o">-</span> <span class="n">values</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a>        <span class="n">std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">kriging_var</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kriging_var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a>        <span class="n">standardized</span> <span class="o">=</span> <span class="n">error</span> <span class="o">/</span> <span class="n">std_dev</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a>            <span class="p">{</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a>                <span class="s2">&quot;observed&quot;</span><span class="p">:</span> <span class="n">values</span><span class="p">,</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a>                <span class="s2">&quot;predicted&quot;</span><span class="p">:</span> <span class="n">predicted</span><span class="p">,</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a>                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">error</span><span class="p">,</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a>                <span class="s2">&quot;kriging_variance&quot;</span><span class="p">:</span> <span class="n">kriging_var</span><span class="p">,</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a>                <span class="s2">&quot;standardized_error&quot;</span><span class="p">:</span> <span class="n">standardized</span><span class="p">,</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a>            <span class="p">}</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a>        <span class="p">)</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a>        <span class="n">frame</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a>            <span class="s2">&quot;ME&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="p">)),</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a>            <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="o">**</span><span class="mi">2</span><span class="p">))),</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a>            <span class="s2">&quot;mean_standardized_error&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">standardized</span><span class="p">)),</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a>            <span class="s2">&quot;RMSE_standardized&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">standardized</span><span class="o">**</span><span class="mi">2</span><span class="p">))),</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a>            <span class="s2">&quot;correlation&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">predicted</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a>        <span class="p">}</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a>        <span class="k">return</span> <span class="n">frame</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1885,17 +1905,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/geostatista/samples.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-170">170</a></span>
-<span class="normal"><a href="#__codelineno-0-171">171</a></span>
-<span class="normal"><a href="#__codelineno-0-172">172</a></span>
-<span class="normal"><a href="#__codelineno-0-173">173</a></span>
-<span class="normal"><a href="#__codelineno-0-174">174</a></span>
-<span class="normal"><a href="#__codelineno-0-175">175</a></span>
-<span class="normal"><a href="#__codelineno-0-176">176</a></span>
-<span class="normal"><a href="#__codelineno-0-177">177</a></span>
-<span class="normal"><a href="#__codelineno-0-178">178</a></span>
-<span class="normal"><a href="#__codelineno-0-179">179</a></span>
-<span class="normal"><a href="#__codelineno-0-180">180</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-180">180</a></span>
 <span class="normal"><a href="#__codelineno-0-181">181</a></span>
 <span class="normal"><a href="#__codelineno-0-182">182</a></span>
 <span class="normal"><a href="#__codelineno-0-183">183</a></span>
@@ -1922,44 +1932,54 @@
 <span class="normal"><a href="#__codelineno-0-204">204</a></span>
 <span class="normal"><a href="#__codelineno-0-205">205</a></span>
 <span class="normal"><a href="#__codelineno-0-206">206</a></span>
-<span class="normal"><a href="#__codelineno-0-207">207</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="k">def</span><span class="w"> </span><span class="nf">cross_validate</span><span class="p">(</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-173" name="__codelineno-0-173"></a>    <span class="n">variogram</span><span class="p">:</span> <span class="s2">&quot;Variogram | str&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-174" name="__codelineno-0-174"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ordinary&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-176" name="__codelineno-0-176"></a>    <span class="n">n_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Leave-one-out cross-validation. Returns a per-point `DataFrame`; summary stats in `frame.attrs[&quot;summary&quot;]`.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="n">coords</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">(</span><span class="s2">&quot;cross_validate&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
-<a id="__codelineno-0-180" name="__codelineno-0-180"></a>    <span class="n">fitted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_variogram</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">variogram</span><span class="p">)</span>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a>    <span class="n">predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a>    <span class="n">kriging_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-<a id="__codelineno-0-185" name="__codelineno-0-185"></a>        <span class="n">keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">i</span>
-<a id="__codelineno-0-186" name="__codelineno-0-186"></a>        <span class="n">engine</span> <span class="o">=</span> <span class="n">OrdinaryKriging</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a>        <span class="n">predicted</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">kriging_var</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">predict_point</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-<a id="__codelineno-0-188" name="__codelineno-0-188"></a>    <span class="n">error</span> <span class="o">=</span> <span class="n">predicted</span> <span class="o">-</span> <span class="n">values</span>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="n">std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">kriging_var</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kriging_var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
-<a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="n">standardized</span> <span class="o">=</span> <span class="n">error</span> <span class="o">/</span> <span class="n">std_dev</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<a id="__codelineno-0-192" name="__codelineno-0-192"></a>        <span class="p">{</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a>            <span class="s2">&quot;observed&quot;</span><span class="p">:</span> <span class="n">values</span><span class="p">,</span>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a>            <span class="s2">&quot;predicted&quot;</span><span class="p">:</span> <span class="n">predicted</span><span class="p">,</span>
-<a id="__codelineno-0-195" name="__codelineno-0-195"></a>            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">error</span><span class="p">,</span>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a>            <span class="s2">&quot;kriging_variance&quot;</span><span class="p">:</span> <span class="n">kriging_var</span><span class="p">,</span>
-<a id="__codelineno-0-197" name="__codelineno-0-197"></a>            <span class="s2">&quot;standardized_error&quot;</span><span class="p">:</span> <span class="n">standardized</span><span class="p">,</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a>        <span class="p">}</span>
-<a id="__codelineno-0-199" name="__codelineno-0-199"></a>    <span class="p">)</span>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a>    <span class="n">frame</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="s2">&quot;ME&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="p">)),</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a>        <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="o">**</span><span class="mi">2</span><span class="p">))),</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a>        <span class="s2">&quot;mean_standardized_error&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">standardized</span><span class="p">)),</span>
-<a id="__codelineno-0-204" name="__codelineno-0-204"></a>        <span class="s2">&quot;RMSE_standardized&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">standardized</span><span class="o">**</span><span class="mi">2</span><span class="p">))),</span>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a>        <span class="s2">&quot;correlation&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">predicted</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a>    <span class="p">}</span>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a>    <span class="k">return</span> <span class="n">frame</span>
+<span class="normal"><a href="#__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="k">def</span><span class="w"> </span><span class="nf">cross_validate</span><span class="p">(</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a>    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a>    <span class="n">variogram</span><span class="p">:</span> <span class="s2">&quot;Variogram | str&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-185" name="__codelineno-0-185"></a>    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ordinary&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-186" name="__codelineno-0-186"></a>    <span class="n">n_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Leave-one-out cross-validation. Returns a per-point `DataFrame`; summary stats in `frame.attrs[&quot;summary&quot;]`.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="n">coords</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">(</span><span class="s2">&quot;cross_validate&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="n">fitted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_variogram</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">variogram</span><span class="p">)</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="n">predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>    <span class="n">kriging_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a>        <span class="n">keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">i</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a>        <span class="n">engine</span> <span class="o">=</span> <span class="n">OrdinaryKriging</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a>        <span class="n">predicted</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">kriging_var</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">predict_point</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>    <span class="n">error</span> <span class="o">=</span> <span class="n">predicted</span> <span class="o">-</span> <span class="n">values</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a>    <span class="n">std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">kriging_var</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kriging_var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a>    <span class="n">standardized</span> <span class="o">=</span> <span class="n">error</span> <span class="o">/</span> <span class="n">std_dev</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a>    <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a>        <span class="p">{</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a>            <span class="s2">&quot;observed&quot;</span><span class="p">:</span> <span class="n">values</span><span class="p">,</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a>            <span class="s2">&quot;predicted&quot;</span><span class="p">:</span> <span class="n">predicted</span><span class="p">,</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a>            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">error</span><span class="p">,</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a>            <span class="s2">&quot;kriging_variance&quot;</span><span class="p">:</span> <span class="n">kriging_var</span><span class="p">,</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a>            <span class="s2">&quot;standardized_error&quot;</span><span class="p">:</span> <span class="n">standardized</span><span class="p">,</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a>        <span class="p">}</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a>    <span class="p">)</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="n">frame</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a>        <span class="s2">&quot;ME&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="p">)),</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a>        <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="o">**</span><span class="mi">2</span><span class="p">))),</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a>        <span class="s2">&quot;mean_standardized_error&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">standardized</span><span class="p">)),</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a>        <span class="s2">&quot;RMSE_standardized&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">standardized</span><span class="o">**</span><span class="mi">2</span><span class="p">))),</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a>        <span class="s2">&quot;correlation&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">predicted</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="p">}</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a>    <span class="k">return</span> <span class="n">frame</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1980,10 +2000,11 @@
         <p>Interpolate <code>column</code> onto a raster. <code>method="kriging"</code> is ordinary kriging; other methods delegate to pyramids' IDW.</p>
 <p>The kriged surface takes its CRS from these samples, so a layer with no CRS yields an unreferenced
 surface rather than one stamped WGS 84, and a projection the EPSG register does not name is carried
-through as WKT. A <code>template</code> supplies the grid geometry and, when it names a CRS of its own, the CRS
-too; a template without one contributes only its geometry. A template whose CRS disagrees
-with this layer's is refused rather than kriged, because the two coordinate sets would not
-be comparable.</p>
+through as WKT. <code>template</code> is <strong>kriging-only</strong>: it supplies the grid geometry and, when it names
+a CRS of its own, the CRS too, while a template without one contributes only its geometry. A
+template whose CRS disagrees with this layer's is refused rather than kriged, because the two
+coordinate sets would not be comparable. The IDW branch has no template concept, so passing one
+there is an error rather than a silently different grid.</p>
 
 
 <p><span class="doc-section-title">Raises:</span></p>
@@ -2050,7 +2071,17 @@ from this layer's.</p>
 <span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span>
 <span class="normal"><a href="#__codelineno-0-140">140</a></span>
-<span class="normal"><a href="#__codelineno-0-141">141</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="k">def</span><span class="w"> </span><span class="nf">interpolate_to_raster</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-141">141</a></span>
+<span class="normal"><a href="#__codelineno-0-142">142</a></span>
+<span class="normal"><a href="#__codelineno-0-143">143</a></span>
+<span class="normal"><a href="#__codelineno-0-144">144</a></span>
+<span class="normal"><a href="#__codelineno-0-145">145</a></span>
+<span class="normal"><a href="#__codelineno-0-146">146</a></span>
+<span class="normal"><a href="#__codelineno-0-147">147</a></span>
+<span class="normal"><a href="#__codelineno-0-148">148</a></span>
+<span class="normal"><a href="#__codelineno-0-149">149</a></span>
+<span class="normal"><a href="#__codelineno-0-150">150</a></span>
+<span class="normal"><a href="#__codelineno-0-151">151</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="k">def</span><span class="w"> </span><span class="nf">interpolate_to_raster</span><span class="p">(</span>
 <a id="__codelineno-0-104" name="__codelineno-0-104"></a>    <span class="bp">self</span><span class="p">,</span>
 <a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="o">*</span><span class="p">,</span>
@@ -2067,28 +2098,38 @@ from this layer's.</p>
 <a id="__codelineno-0-117" name="__codelineno-0-117"></a>
 <a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">    The kriged surface takes its CRS from these samples, so a layer with no CRS yields an unreferenced</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="sd">    surface rather than one stamped WGS 84, and a projection the EPSG register does not name is carried</span>
-<a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">    through as WKT. A `template` supplies the grid geometry and, when it names a CRS of its own, the CRS</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">    too; a template without one contributes only its geometry. A template whose CRS disagrees</span>
-<a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">    with this layer&#39;s is refused rather than kriged, because the two coordinate sets would not</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123"></a><span class="sd">    be comparable.</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124"></a>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">        ValueError: If `template` is given for a non-kriging `method`, or if its CRS differs</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">            from this layer&#39;s.</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;kriging&quot;</span><span class="p">:</span>
-<a id="__codelineno-0-130" name="__codelineno-0-130"></a>        <span class="n">coords</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">(</span><span class="s2">&quot;interpolate_to_raster&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
-<a id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_check_template_crs</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
-<a id="__codelineno-0-132" name="__codelineno-0-132"></a>        <span class="n">fitted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_variogram</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">variogram</span><span class="p">)</span>
-<a id="__codelineno-0-133" name="__codelineno-0-133"></a>        <span class="n">engine</span> <span class="o">=</span> <span class="n">OrdinaryKriging</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
-<a id="__codelineno-0-134" name="__codelineno-0-134"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">predict_grid</span><span class="p">(</span>
-<a id="__codelineno-0-135" name="__codelineno-0-135"></a>            <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_epsg</span><span class="p">(),</span> <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span>
-<a id="__codelineno-0-136" name="__codelineno-0-136"></a>        <span class="p">)</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a>            <span class="n">column</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span> <span class="o">**</span><span class="n">idw_kwargs</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a>        <span class="p">)</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>    <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">    through as WKT. `template` is **kriging-only**: it supplies the grid geometry and, when it names</span>
+<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">    a CRS of its own, the CRS too, while a template without one contributes only its geometry. A</span>
+<a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">    template whose CRS disagrees with this layer&#39;s is refused rather than kriged, because the two</span>
+<a id="__codelineno-0-123" name="__codelineno-0-123"></a><span class="sd">    coordinate sets would not be comparable. The IDW branch has no template concept, so passing one</span>
+<a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">    there is an error rather than a silently different grid.</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">        ValueError: If `template` is given for a non-kriging `method`, or if its CRS differs</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">            from this layer&#39;s.</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;kriging&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="n">coords</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">(</span><span class="s2">&quot;interpolate_to_raster&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_check_template_crs</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133"></a>        <span class="n">fitted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_variogram</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">variogram</span><span class="p">)</span>
+<a id="__codelineno-0-134" name="__codelineno-0-134"></a>        <span class="n">engine</span> <span class="o">=</span> <span class="n">OrdinaryKriging</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">)</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">predict_grid</span><span class="p">(</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a>            <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_epsg</span><span class="p">(),</span> <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="p">)</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>                <span class="sa">f</span><span class="s2">&quot;interpolate_to_raster: template is only supported for method=&#39;kriging&#39;, not </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-142" name="__codelineno-0-142"></a>            <span class="p">)</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143"></a>        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
+<a id="__codelineno-0-144" name="__codelineno-0-144"></a>            <span class="n">column</span><span class="p">,</span>
+<a id="__codelineno-0-145" name="__codelineno-0-145"></a>            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+<a id="__codelineno-0-146" name="__codelineno-0-146"></a>            <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147"></a>            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148"></a>            <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a>            <span class="o">**</span><span class="n">idw_kwargs</span><span class="p">,</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150"></a>        <span class="p">)</span>
+<a id="__codelineno-0-151" name="__codelineno-0-151"></a>    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2113,17 +2154,7 @@ give an unreferenced surface.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/geostatista/samples.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-143">143</a></span>
-<span class="normal"><a href="#__codelineno-0-144">144</a></span>
-<span class="normal"><a href="#__codelineno-0-145">145</a></span>
-<span class="normal"><a href="#__codelineno-0-146">146</a></span>
-<span class="normal"><a href="#__codelineno-0-147">147</a></span>
-<span class="normal"><a href="#__codelineno-0-148">148</a></span>
-<span class="normal"><a href="#__codelineno-0-149">149</a></span>
-<span class="normal"><a href="#__codelineno-0-150">150</a></span>
-<span class="normal"><a href="#__codelineno-0-151">151</a></span>
-<span class="normal"><a href="#__codelineno-0-152">152</a></span>
-<span class="normal"><a href="#__codelineno-0-153">153</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-153">153</a></span>
 <span class="normal"><a href="#__codelineno-0-154">154</a></span>
 <span class="normal"><a href="#__codelineno-0-155">155</a></span>
 <span class="normal"><a href="#__codelineno-0-156">156</a></span>
@@ -2138,32 +2169,42 @@ give an unreferenced surface.</p>
 <span class="normal"><a href="#__codelineno-0-165">165</a></span>
 <span class="normal"><a href="#__codelineno-0-166">166</a></span>
 <span class="normal"><a href="#__codelineno-0-167">167</a></span>
-<span class="normal"><a href="#__codelineno-0-168">168</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="k">def</span><span class="w"> </span><span class="nf">krige</span><span class="p">(</span>
-<a id="__codelineno-0-144" name="__codelineno-0-144"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-145" name="__codelineno-0-145"></a>    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-146" name="__codelineno-0-146"></a>    <span class="n">variogram</span><span class="p">:</span> <span class="s2">&quot;Variogram | str&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-147" name="__codelineno-0-147"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-148" name="__codelineno-0-148"></a>    <span class="n">cell_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-149" name="__codelineno-0-149"></a>    <span class="n">bounds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-150" name="__codelineno-0-150"></a>    <span class="n">n_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-<a id="__codelineno-0-151" name="__codelineno-0-151"></a>    <span class="n">nodata</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9999.0</span><span class="p">,</span>
-<a id="__codelineno-0-152" name="__codelineno-0-152"></a>    <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="p">):</span>
-<a id="__codelineno-0-154" name="__codelineno-0-154"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience alias for `interpolate_to_raster(column, method=&quot;kriging&quot;, ...)`.</span>
-<a id="__codelineno-0-155" name="__codelineno-0-155"></a>
-<a id="__codelineno-0-156" name="__codelineno-0-156"></a><span class="sd">    The surface inherits this layer&#39;s CRS unless `template` names one of its own; samples with no CRS</span>
-<a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="sd">    give an unreferenced surface.</span>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a>        <span class="n">column</span><span class="p">,</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a>        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;kriging&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="n">variogram</span><span class="o">=</span><span class="n">variogram</span><span class="p">,</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a>        <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a>        <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a>        <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span>
-<a id="__codelineno-0-166" name="__codelineno-0-166"></a>        <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a>        <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-168">168</a></span>
+<span class="normal"><a href="#__codelineno-0-169">169</a></span>
+<span class="normal"><a href="#__codelineno-0-170">170</a></span>
+<span class="normal"><a href="#__codelineno-0-171">171</a></span>
+<span class="normal"><a href="#__codelineno-0-172">172</a></span>
+<span class="normal"><a href="#__codelineno-0-173">173</a></span>
+<span class="normal"><a href="#__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#__codelineno-0-176">176</a></span>
+<span class="normal"><a href="#__codelineno-0-177">177</a></span>
+<span class="normal"><a href="#__codelineno-0-178">178</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="k">def</span><span class="w"> </span><span class="nf">krige</span><span class="p">(</span>
+<a id="__codelineno-0-154" name="__codelineno-0-154"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-155" name="__codelineno-0-155"></a>    <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="n">variogram</span><span class="p">:</span> <span class="s2">&quot;Variogram | str&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="n">cell_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="n">bounds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="n">n_neighbors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="n">nodata</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9999.0</span><span class="p">,</span>
+<a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="p">):</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience alias for `interpolate_to_raster(column, method=&quot;kriging&quot;, ...)`.</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a>
+<a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    The surface inherits this layer&#39;s CRS unless `template` names one of its own; samples with no CRS</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    give an unreferenced surface.</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_to_raster</span><span class="p">(</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a>        <span class="n">column</span><span class="p">,</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a>        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;kriging&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a>        <span class="n">variogram</span><span class="o">=</span><span class="n">variogram</span><span class="p">,</span>
+<a id="__codelineno-0-173" name="__codelineno-0-173"></a>        <span class="n">cell_size</span><span class="o">=</span><span class="n">cell_size</span><span class="p">,</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a>        <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a>        <span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a>        <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a>        <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
