@@ -8,7 +8,7 @@ method argument (never constructor state), so the subclass needs only the one-li
 import numpy as np
 import pandas as pd
 from loguru import logger
-from pyramids.base.crs import crs_spec
+from pyramids.base.crs import crs_equal, crs_spec
 from pyramids.feature import FeatureCollection
 
 from .kriging import OrdinaryKriging
@@ -81,6 +81,25 @@ class Samples(FeatureCollection):
             resolved = self.variogram(column).fit(model=variogram)
         return resolved
 
+    def _check_template_crs(self, template) -> None:
+        """Refuse a `template` whose CRS disagrees with this layer's.
+
+        `predict_grid` kriges the template's cell-centre coordinates against these samples'
+        coordinates, which is only meaningful within one CRS. When the two disagree the estimates
+        are computed in one system and the raster is labelled with another — an error of
+        continental scale, produced silently. A template with no CRS is fine: it contributes only
+        geometry, and the layer's own CRS still reaches the surface.
+        """
+        if template is None:
+            return
+        layer = self._epsg()
+        other = crs_spec(template.epsg, template.crs)
+        if layer is not None and other is not None and not crs_equal(layer, other):
+            raise ValueError(
+                f"interpolate_to_raster: the template's CRS ({other}) differs from the layer's "
+                f"({layer}); reproject one to match the other before kriging"
+            )
+
     def interpolate_to_raster(
         self,
         column: str,
@@ -99,10 +118,17 @@ class Samples(FeatureCollection):
         The kriged surface takes its CRS from these samples, so a layer with no CRS yields an unreferenced
         surface rather than one stamped WGS 84, and a projection the EPSG register does not name is carried
         through as WKT. A `template` supplies the grid geometry and, when it names a CRS of its own, the CRS
-        too; a template without one contributes only its geometry.
+        too; a template without one contributes only its geometry. A template whose CRS disagrees
+        with this layer's is refused rather than kriged, because the two coordinate sets would not
+        be comparable.
+
+        Raises:
+            ValueError: If `template` is given for a non-kriging `method`, or if its CRS differs
+                from this layer's.
         """
         if method == "kriging":
             coords, values = self._clean("interpolate_to_raster", column)
+            self._check_template_crs(template)
             fitted = self._resolve_variogram(column, variogram)
             engine = OrdinaryKriging(coords, values, fitted, n_neighbors=n_neighbors)
             result = engine.predict_grid(
