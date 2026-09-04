@@ -125,7 +125,8 @@ class Variogram:
             from cleopatra.glyphs.primitives.scatter_glyph import ScatterGlyph
         except ImportError as exc:  # pragma: no cover
             raise ImportError(
-                "Variogram.plot requires the 'viz' extra (cleopatra): install geostatista[viz]"
+                "Variogram.plot requires cleopatra >=0.31.0 (the 'viz' extra): "
+                "install or upgrade geostatista[viz]"
             ) from exc
         valid = np.isfinite(self.semivariance)
         fig, ax, _ = ScatterGlyph(self.lags[valid], self.semivariance[valid], ax=ax).plot(
