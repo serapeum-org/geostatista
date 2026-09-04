@@ -280,11 +280,13 @@ def test_samples_crs_without_an_epsg_code_reaches_the_surface():
     assert "geos" in surface.crs.lower()                             # the samples' projection, carried through
 
 
-def test_predict_grid_defaults_to_4326():
-    """With neither a template nor an `epsg` argument, the documented 4326 default stands."""
+def test_predict_grid_invents_no_crs():
+    """Told nothing about the CRS, the engine leaves the surface unreferenced rather than guessing WGS 84."""
     s = make_samples(30)
     engine = OrdinaryKriging(*s._clean("t", "z"), fitted_variogram(s))
-    assert engine.predict_grid(cell_size=20.0).epsg == 4326
+    surface = engine.predict_grid(cell_size=20.0)
+    assert surface.epsg is None
+    assert not surface.crs
 
 
 @pytest.mark.parametrize("epsg", [32633, None])

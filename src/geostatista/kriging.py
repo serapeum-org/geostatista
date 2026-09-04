@@ -75,7 +75,7 @@ class OrdinaryKriging:
         cell_size: float | None = None,
         bounds: tuple[float, float, float, float] | None = None,
         template=None,
-        epsg: int | str | None = 4326,
+        epsg: int | str | None = None,
         nodata: float = -9999.0,
     ) -> KrigedSurface:
         """Krige onto a regular grid (from `cell_size` + `bounds`, or an existing `template` Dataset).
@@ -83,8 +83,10 @@ class OrdinaryKriging:
         The output CRS is resolved by falling back, never by overwriting: the `template`'s own
         CRS wins when it has one, otherwise `epsg` is kept — which is how `Samples.krige` passes
         the point layer's CRS through for a template that carries none. `epsg` accepts a code, a
-        CRS specification string (WKT), or `None` for a deliberately ungeoreferenced surface; the
-        4326 default applies only when nothing else says anything about the CRS.
+        CRS specification string (WKT), or `None`. Nothing is invented: an engine built from bare
+        coordinate arrays has been told nothing about the CRS, so saying nothing yields an
+        unreferenced surface rather than one stamped WGS 84 — the same rule `Samples._epsg`
+        follows one frame up.
         """
         if template is not None:
             geo = template.geotransform
