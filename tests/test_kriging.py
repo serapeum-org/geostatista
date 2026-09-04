@@ -313,6 +313,14 @@ def test_template_is_rejected_on_the_idw_branch():
         s.interpolate_to_raster("z", method="idw", cell_size=10.0, template=template_with(32633))
 
 
+def test_idw_honours_an_explicit_n_neighbors():
+    s = make_samples(40)
+    unlimited = s.interpolate_to_raster("z", method="idw", cell_size=10.0)
+    limited = s.interpolate_to_raster("z", method="idw", cell_size=10.0, n_neighbors=4)
+    a, b = np.asarray(unlimited.read_array()), np.asarray(limited.read_array())
+    assert not np.allclose(a, b)                                     # invdistnn(4), not invdist over all points
+
+
 def test_predict_grid_requires_cell_size_or_template():
     s = make_samples(30)
     engine = OrdinaryKriging(*s._clean("t", "z"), fitted_variogram(s))

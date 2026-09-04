@@ -5,6 +5,8 @@ adds `variogram()`, `interpolate_to_raster(method="kriging")` / `krige()`, and `
 method argument (never constructor state), so the subclass needs only the one-line `_constructor` override below.
 """
 
+from typing import TYPE_CHECKING
+
 import numpy as np
 import pandas as pd
 from loguru import logger
@@ -13,6 +15,15 @@ from pyramids.feature import FeatureCollection
 
 from .kriging import OrdinaryKriging
 from .variogram import Variogram, empirical_variogram
+
+if TYPE_CHECKING:
+    from pyramids.dataset import Dataset
+
+#: Distinguishes "the caller passed `n_neighbors`" from "the caller said nothing". The two branches
+#: of `interpolate_to_raster` have different natural defaults — 32 for kriging's moving
+#: neighbourhood, all-points for pyramids' IDW (`invdist`) — so an unspoken 32 must not be forwarded
+#: to IDW and silently turn it into `invdistnn`.
+_UNSET: object = object()
 
 
 class Samples(FeatureCollection):
@@ -108,9 +119,9 @@ class Samples(FeatureCollection):
         variogram: "Variogram | str" = "spherical",
         cell_size: float | None = None,
         bounds: tuple[float, float, float, float] | None = None,
-        n_neighbors: int = 32,
+        n_neighbors: int | None | object = _UNSET,
         nodata: float = -9999.0,
-        template=None,
+        template: "Dataset | None" = None,
         **idw_kwargs,
     ):
         """Interpolate `column` onto a raster. `method="kriging"` is ordinary kriging; other methods delegate to pyramids' IDW.
@@ -123,6 +134,11 @@ class Samples(FeatureCollection):
         coordinate sets would not be comparable. The IDW branch has no template concept, so passing one
         there is an error rather than a silently different grid.
 
+        `n_neighbors` reaches whichever branch runs: kriging's moving neighbourhood (default 32), or
+        pyramids' `invdistnn` for IDW. It is forwarded to IDW only when you actually pass it, so
+        leaving it alone keeps pyramids' own default of weighting every point (`invdist`). `None`
+        means "use all points" to both.
+
         Raises:
             ValueError: If `template` is given for a non-kriging `method`, or if its CRS differs
                 from this layer's.
@@ -131,7 +147,8 @@ class Samples(FeatureCollection):
             coords, values = self._clean("interpolate_to_raster", column)
             self._check_template_crs(template)
             fitted = self._resolve_variogram(column, variogram)
-            engine = OrdinaryKriging(coords, values, fitted, n_neighbors=n_neighbors)
+            neighbors = 32 if n_neighbors is _UNSET else n_neighbors
+            engine = OrdinaryKriging(coords, values, fitted, n_neighbors=neighbors)
             result = engine.predict_grid(
                 cell_size=cell_size, bounds=bounds, template=template, epsg=self._epsg(), nodata=nodata
             )
@@ -140,12 +157,14 @@ class Samples(FeatureCollection):
                 raise ValueError(
                     f"interpolate_to_raster: template is only supported for method='kriging', not {method!r}"
                 )
+            neighbors = {} if n_neighbors is _UNSET else {"n_neighbors": n_neighbors}
             result = super().interpolate_to_raster(
                 column,
                 method=method,
                 cell_size=cell_size,
                 bounds=bounds,
                 nodata=nodata,
+                **neighbors,
                 **idw_kwargs,
             )
         return result
