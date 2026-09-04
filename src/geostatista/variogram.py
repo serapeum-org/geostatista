@@ -126,7 +126,7 @@ class Variogram:
         try:
             from cleopatra.glyphs.primitives.line_glyph import LineGlyph
             from cleopatra.glyphs.primitives.scatter_glyph import ScatterGlyph
-        except ImportError as exc:  # pragma: no cover
+        except ImportError as exc:
             raise ImportError(
                 "Variogram.plot requires cleopatra >=0.31.0 (the 'viz' extra): "
                 "install or upgrade geostatista[viz]"

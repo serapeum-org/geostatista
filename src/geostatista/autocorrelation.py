@@ -302,7 +302,7 @@ def _class_choropleth(fc, codes: np.ndarray, title: str, vabs: float, ax):
     """Render a per-feature diverging choropleth of signed class `codes` via cleopatra's PolygonGlyph."""
     try:
         from cleopatra.glyphs.primitives.polygon_glyph import PolygonGlyph
-    except ImportError as exc:  # pragma: no cover
+    except ImportError as exc:
         raise ImportError(
             "plotting requires cleopatra >=0.31.0 (the 'viz' extra): install or upgrade geostatista[viz]"
         ) from exc

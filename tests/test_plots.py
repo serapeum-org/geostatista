@@ -2,6 +2,7 @@
 
 import pathlib
 import re
+import sys
 
 import numpy as np
 import geopandas as gpd
@@ -64,3 +65,21 @@ def test_lisa_and_hotspot_maps_via_cleopatra():
     hot = getis_ord_gi(tracts, "v", w, star=True)
     fig2, ax2 = plot_hotspots(hot)
     assert fig2 is not None and len(ax2.collections) >= 1
+
+
+def test_import_errors_name_the_cleopatra_version(monkeypatch):
+    """An installed-but-too-old cleopatra hits the same handler, so the message must say `upgrade`, not just `install`."""
+    from geostatista.autocorrelation import _class_choropleth
+    from geostatista.variogram import Variogram
+
+    # Blocking the glyph modules (leaving `cleopatra` itself importable) is exactly the shape of a
+    # pre-0.30.0 cleopatra, where the package imports fine and only the submodules are missing.
+    for module in ("cleopatra.glyphs.primitives.scatter_glyph", "cleopatra.glyphs.primitives.line_glyph",
+                   "cleopatra.glyphs.primitives.polygon_glyph"):
+        monkeypatch.setitem(sys.modules, module, None)
+
+    vg = _samples().variogram("z", n_lags=12)
+    with pytest.raises(ImportError, match=r"cleopatra >=0\.31\.0.*install or upgrade"):
+        vg.plot()
+    with pytest.raises(ImportError, match=r"cleopatra >=0\.31\.0.*install or upgrade"):
+        _class_choropleth(_samples(), np.zeros(60), "t", 1.0, None)
