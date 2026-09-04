@@ -5,6 +5,7 @@ Loops target cells through the moving neighborhood (`_solve/neighborhood.py`) an
 """
 
 import numpy as np
+from pyramids.base.crs import crs_spec
 from scipy.spatial.distance import cdist, pdist, squareform
 
 from ._solve.neighborhood import Neighborhood
@@ -74,10 +75,17 @@ class OrdinaryKriging:
         cell_size: float | None = None,
         bounds: tuple[float, float, float, float] | None = None,
         template=None,
-        epsg: int | None = 4326,
+        epsg: int | str | None = 4326,
         nodata: float = -9999.0,
     ) -> KrigedSurface:
-        """Krige onto a regular grid (from `cell_size` + `bounds`, or an existing `template` Dataset)."""
+        """Krige onto a regular grid (from `cell_size` + `bounds`, or an existing `template` Dataset).
+
+        The output CRS is resolved by falling back, never by overwriting: the `template`'s own
+        CRS wins when it has one, otherwise `epsg` is kept — which is how `Samples.krige` passes
+        the point layer's CRS through for a template that carries none. `epsg` accepts a code, a
+        CRS specification string (WKT), or `None` for a deliberately ungeoreferenced surface; the
+        4326 default applies only when nothing else says anything about the CRS.
+        """
         if template is not None:
             geo = template.geotransform
             shape = np.asarray(template.read_array()).shape
@@ -85,10 +93,15 @@ class OrdinaryKriging:
             minx, cell_x, top_y, cell_y = geo[0], geo[1], geo[3], -geo[5]
             xs = minx + (np.arange(ncols) + 0.5) * cell_x
             ys = top_y - (np.arange(nrows) + 0.5) * cell_y
-            # `Dataset.epsg` is `None` for a template with no CRS (pyramids >=0.47 no
-            # longer substitutes EPSG:4326); carry the absence through instead of
-            # crashing on `int(None)`.
-            epsg = None if template.epsg is None else int(template.epsg)
+            # `template.epsg` alone is `None` both for a template with no CRS and for one
+            # whose CRS carries no EPSG authority (pyramids >=0.47 stopped substituting
+            # EPSG:4326 for either); `crs_spec` tells them apart, returning the WKT for the
+            # second. Only override `epsg` when the template actually names a CRS — otherwise
+            # the caller's argument stands, so a CRS-less template borrows the grid geometry
+            # without discarding the CRS the samples brought.
+            template_crs = crs_spec(template.epsg, template.crs)
+            if template_crs is not None:
+                epsg = template_crs
         else:
             if cell_size is None:
                 raise ValueError("predict_grid: provide cell_size (or a template Dataset)")
