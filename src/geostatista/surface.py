@@ -6,8 +6,9 @@ is stored as typed attributes and, on `persist_metadata`, as raster tags so a wr
 """
 
 import numpy as np
-from pyramids.base.crs import crs_spec
 from pyramids.dataset import Dataset, GeoReference
+
+from ._crs import crs_spec
 
 
 class KrigedSurface(Dataset):

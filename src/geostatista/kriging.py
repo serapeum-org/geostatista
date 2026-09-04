@@ -7,9 +7,9 @@ Loops target cells through the moving neighborhood (`_solve/neighborhood.py`) an
 from typing import TYPE_CHECKING
 
 import numpy as np
-from pyramids.base.crs import crs_spec
 from scipy.spatial.distance import cdist, pdist, squareform
 
+from ._crs import crs_spec
 from ._solve.neighborhood import Neighborhood
 from ._solve.system import solve_ordinary
 from .surface import KrigedSurface

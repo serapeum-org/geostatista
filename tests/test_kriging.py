@@ -3,7 +3,7 @@
 import numpy as np
 import geopandas as gpd
 import pytest
-from pyramids.base.crs import crs_equal
+from geostatista._crs import crs_equal
 from shapely.geometry import Point
 
 from geostatista import KrigedSurface, Samples, Variogram, models

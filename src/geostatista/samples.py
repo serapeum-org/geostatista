@@ -10,9 +10,9 @@ from typing import TYPE_CHECKING
 import numpy as np
 import pandas as pd
 from loguru import logger
-from pyramids.base.crs import crs_equal, crs_spec
 from pyramids.feature import FeatureCollection
 
+from ._crs import crs_equal, crs_spec
 from .kriging import OrdinaryKriging
 from .variogram import Variogram, empirical_variogram
 
