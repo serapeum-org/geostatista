@@ -307,6 +307,12 @@ def test_bands_carry_a_projection_that_has_no_epsg_code():
         assert "geos" in band.crs.lower()
 
 
+def test_template_is_rejected_on_the_idw_branch():
+    s = make_samples(40)
+    with pytest.raises(ValueError, match="only supported for method='kriging'"):
+        s.interpolate_to_raster("z", method="idw", cell_size=10.0, template=template_with(32633))
+
+
 def test_predict_grid_requires_cell_size_or_template():
     s = make_samples(30)
     engine = OrdinaryKriging(*s._clean("t", "z"), fitted_variogram(s))

@@ -117,10 +117,11 @@ class Samples(FeatureCollection):
 
         The kriged surface takes its CRS from these samples, so a layer with no CRS yields an unreferenced
         surface rather than one stamped WGS 84, and a projection the EPSG register does not name is carried
-        through as WKT. A `template` supplies the grid geometry and, when it names a CRS of its own, the CRS
-        too; a template without one contributes only its geometry. A template whose CRS disagrees
-        with this layer's is refused rather than kriged, because the two coordinate sets would not
-        be comparable.
+        through as WKT. `template` is **kriging-only**: it supplies the grid geometry and, when it names
+        a CRS of its own, the CRS too, while a template without one contributes only its geometry. A
+        template whose CRS disagrees with this layer's is refused rather than kriged, because the two
+        coordinate sets would not be comparable. The IDW branch has no template concept, so passing one
+        there is an error rather than a silently different grid.
 
         Raises:
             ValueError: If `template` is given for a non-kriging `method`, or if its CRS differs
@@ -135,8 +136,17 @@ class Samples(FeatureCollection):
                 cell_size=cell_size, bounds=bounds, template=template, epsg=self._epsg(), nodata=nodata
             )
         else:
+            if template is not None:
+                raise ValueError(
+                    f"interpolate_to_raster: template is only supported for method='kriging', not {method!r}"
+                )
             result = super().interpolate_to_raster(
-                column, method=method, cell_size=cell_size, bounds=bounds, nodata=nodata, **idw_kwargs
+                column,
+                method=method,
+                cell_size=cell_size,
+                bounds=bounds,
+                nodata=nodata,
+                **idw_kwargs,
             )
         return result
 
