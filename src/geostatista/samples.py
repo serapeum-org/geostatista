@@ -8,6 +8,7 @@ method argument (never constructor state), so the subclass needs only the one-li
 import numpy as np
 import pandas as pd
 from loguru import logger
+from pyramids.base.crs import crs_spec
 from pyramids.feature import FeatureCollection
 
 from .kriging import OrdinaryKriging
@@ -37,10 +38,17 @@ class Samples(FeatureCollection):
             raise ValueError(f"{op}: need at least 3 valid points, got {len(values)}")
         return coords, values
 
-    def _epsg(self) -> int:
-        """The EPSG code of the layer, defaulting to 4326 when the CRS is unset."""
-        epsg = None if self.crs is None else self.crs.to_epsg()
-        return 4326 if epsg is None else int(epsg)
+    def _epsg(self) -> int | str | None:
+        """The layer's CRS specification — its EPSG code, else its WKT, else `None` when it has no CRS.
+
+        Deliberately does not fall back to 4326. A layer with no CRS has no CRS, and stamping
+        WGS 84 on the kriged surface would assert a georeference the observations never carried;
+        `crs_spec` also keeps a projection the EPSG register does not name (which `to_epsg()`
+        alone reports as `None`) rather than discarding it.
+        """
+        if self.crs is None:
+            return None
+        return crs_spec(self.crs.to_epsg(), self.crs.to_wkt())
 
     def values(self, column: str) -> np.ndarray:
         """The numeric observations of `column` (NaN dropped), shape `(n,)`."""
