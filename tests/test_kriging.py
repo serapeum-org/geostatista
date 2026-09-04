@@ -246,8 +246,9 @@ def test_template_crs_wins_over_the_samples_crs():
 
 def test_template_crs_disagreeing_with_the_layer_is_refused():
     s = make_samples(40)                                             # samples are EPSG:32633
+    vg, template = fitted_variogram(s), template_with(3857)
     with pytest.raises(ValueError, match="differs from the layer"):
-        s.krige("z", fitted_variogram(s), template=template_with(3857))
+        s.krige("z", vg, template=template)
 
 
 def test_crs_less_layer_accepts_a_template_that_names_a_crs():
@@ -262,7 +263,8 @@ def test_template_without_epsg_code_keeps_its_projection():
     wkt = geostationary_wkt()
     s = make_samples(40, crs=wkt)                                    # layer and template agree
     template = template_with(wkt)
-    assert template.epsg is None and template.crs                    # a real CRS that has no EPSG code
+    assert template.epsg is None                                     # a real CRS that has no EPSG code
+    assert template.crs
     surface = s.krige("z", fitted_variogram(s), template=template)
     assert surface.epsg is None
     assert "geos" in surface.crs.lower()                             # WKT carried through, not discarded
@@ -311,7 +313,8 @@ def test_bands_of_an_unreferenced_surface_stay_unreferenced():
     """The `_band` fix must carry an *absent* CRS through too, not just a present one."""
     s = make_samples(40, crs=None)
     surface = s.krige("z", fitted_variogram(s), cell_size=10.0)
-    assert surface.epsg is None and not surface.crs
+    assert surface.epsg is None
+    assert not surface.crs
     for band in (surface.estimate, surface.variance):
         assert band.epsg is None
         assert not band.crs
@@ -328,8 +331,9 @@ def test_bands_carry_a_projection_that_has_no_epsg_code():
 
 def test_template_is_rejected_on_the_idw_branch():
     s = make_samples(40)
+    template = template_with(32633)
     with pytest.raises(ValueError, match="only supported for method='kriging'"):
-        s.interpolate_to_raster("z", method="idw", cell_size=10.0, template=template_with(32633))
+        s.interpolate_to_raster("z", method="idw", cell_size=10.0, template=template)
 
 
 def test_idw_honours_an_explicit_n_neighbors():
@@ -390,8 +394,10 @@ def test_variogram_predict_before_fit_raises():
 def test_kriging_rejects_an_unfitted_variogram():
     """An empirical variogram that was never `.fit()` has no sill, so kriging refuses it up front."""
     s = make_samples(20)
+    coords, values = s._clean("t", "z")
+    unfitted = s.variogram("z")
     with pytest.raises(ValueError, match="must be fitted"):
-        OrdinaryKriging(*s._clean("t", "z"), s.variogram("z"))
+        OrdinaryKriging(coords, values, unfitted)
 
 
 def test_surface_estimate_band():

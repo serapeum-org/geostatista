@@ -79,7 +79,8 @@ def test_import_errors_name_the_cleopatra_version(monkeypatch):
         monkeypatch.setitem(sys.modules, module, None)
 
     vg = _samples().variogram("z", n_lags=12)
+    fc, codes = _samples(), np.zeros(60)
     with pytest.raises(ImportError, match=r"cleopatra >=0\.31\.0.*install or upgrade"):
         vg.plot()
     with pytest.raises(ImportError, match=r"cleopatra >=0\.31\.0.*install or upgrade"):
-        _class_choropleth(_samples(), np.zeros(60), "t", 1.0, None)
+        _class_choropleth(fc, codes, "t", 1.0, None)
