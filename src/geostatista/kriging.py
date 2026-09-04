@@ -74,7 +74,7 @@ class OrdinaryKriging:
         cell_size: float | None = None,
         bounds: tuple[float, float, float, float] | None = None,
         template=None,
-        epsg: int = 4326,
+        epsg: int | None = 4326,
         nodata: float = -9999.0,
     ) -> KrigedSurface:
         """Krige onto a regular grid (from `cell_size` + `bounds`, or an existing `template` Dataset)."""
@@ -85,7 +85,10 @@ class OrdinaryKriging:
             minx, cell_x, top_y, cell_y = geo[0], geo[1], geo[3], -geo[5]
             xs = minx + (np.arange(ncols) + 0.5) * cell_x
             ys = top_y - (np.arange(nrows) + 0.5) * cell_y
-            epsg = int(template.epsg)
+            # `Dataset.epsg` is `None` for a template with no CRS (pyramids >=0.47 no
+            # longer substitutes EPSG:4326); carry the absence through instead of
+            # crashing on `int(None)`.
+            epsg = None if template.epsg is None else int(template.epsg)
         else:
             if cell_size is None:
                 raise ValueError("predict_grid: provide cell_size (or a template Dataset)")

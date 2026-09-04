@@ -121,8 +121,8 @@ class Variogram:
             ImportError: If cleopatra (the `viz` extra) is not installed.
         """
         try:
-            from cleopatra.line_glyph import LineGlyph
-            from cleopatra.scatter_glyph import ScatterGlyph
+            from cleopatra.glyphs.primitives.line_glyph import LineGlyph
+            from cleopatra.glyphs.primitives.scatter_glyph import ScatterGlyph
         except ImportError as exc:  # pragma: no cover
             raise ImportError(
                 "Variogram.plot requires the 'viz' extra (cleopatra): install geostatista[viz]"

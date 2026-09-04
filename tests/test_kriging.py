@@ -188,11 +188,14 @@ def test_cressie_estimator_is_robust_to_outlier():
 
 
 def test_krige_onto_template_grid():
-    from pyramids.dataset import Dataset
+    from pyramids.dataset import Dataset, GeoReference
 
     s = make_samples(50)
     vg = fitted_variogram(s)
-    template = Dataset.create_from_array(np.zeros((10, 12)), geo=(0.0, 8.0, 0.0, 100.0, 0.0, -8.0), epsg=32633)
+    template = Dataset.from_array(
+        np.zeros((10, 12)),
+        geo_ref=GeoReference(geo=(0.0, 8.0, 0.0, 100.0, 0.0, -8.0), epsg=32633),
+    )
     surface = s.krige("z", vg, template=template)
     assert np.asarray(surface.read_array()).shape == (2, 10, 12)     # aligns cell-for-cell with the template
     assert surface.epsg == 32633

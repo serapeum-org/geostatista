@@ -6,7 +6,7 @@ is stored as typed attributes and, on `persist_metadata`, as raster tags so a wr
 """
 
 import numpy as np
-from pyramids.dataset import Dataset
+from pyramids.dataset import Dataset, GeoReference
 
 
 class KrigedSurface(Dataset):
@@ -37,7 +37,7 @@ class KrigedSurface(Dataset):
         variance: np.ndarray,
         *,
         geo: tuple[float, float, float, float, float, float],
-        epsg: int,
+        epsg: int | None,
         nodata: float = -9999.0,
         model: str | None = None,
         nugget: float | None = None,
@@ -45,9 +45,15 @@ class KrigedSurface(Dataset):
         range_: float | None = None,
         n_neighbors: int | None = None,
     ) -> "KrigedSurface":
-        """Build a `KrigedSurface` from estimate + variance arrays and a geotransform."""
+        """Build a `KrigedSurface` from estimate + variance arrays and a geotransform.
+
+        `epsg` of `None` leaves the surface without a CRS, matching what pyramids reports
+        for an ungeoreferenced template rather than defaulting to WGS 84.
+        """
         stacked = np.stack([np.asarray(estimate, dtype=float), np.asarray(variance, dtype=float)])
-        dataset = Dataset.create_from_array(stacked, geo=geo, epsg=int(epsg), no_data_value=nodata)
+        dataset = Dataset.from_array(
+            stacked, geo_ref=GeoReference(geo=geo, epsg=epsg), no_data_value=nodata
+        )
         surface = cls(
             dataset.raster,
             model=model,
@@ -64,7 +70,13 @@ class KrigedSurface(Dataset):
         array = np.asarray(self.read_array())
         band = array[index] if array.ndim == 3 else array
         nodata = self.no_data_value[index] if self.no_data_value else -9999.0
-        dataset = Dataset.create_from_array(band, geo=self.geotransform, epsg=self.epsg, no_data_value=nodata)
+        # `self.epsg` is `None` for an ungeoreferenced surface; `GeoReference` carries that
+        # through as "no CRS" rather than stamping WGS 84 on it.
+        dataset = Dataset.from_array(
+            band,
+            geo_ref=GeoReference(geo=self.geotransform, epsg=self.epsg),
+            no_data_value=nodata,
+        )
         return dataset
 
     @property
