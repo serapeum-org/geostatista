@@ -250,6 +250,14 @@ def test_template_crs_disagreeing_with_the_layer_is_refused():
         s.krige("z", fitted_variogram(s), template=template_with(3857))
 
 
+def test_crs_less_layer_accepts_a_template_that_names_a_crs():
+    """A layer with no CRS has nothing to disagree with, so the template's CRS is adopted rather than refused."""
+    s = make_samples(40, crs=None)
+    surface = s.krige("z", fitted_variogram(s), template=template_with(32633))
+    assert surface.epsg == 32633                                     # adopted, not rejected as a mismatch
+    assert np.asarray(surface.read_array()).shape == (2, 10, 12)
+
+
 def test_template_without_epsg_code_keeps_its_projection():
     wkt = geostationary_wkt()
     s = make_samples(40, crs=wkt)                                    # layer and template agree
@@ -330,6 +338,40 @@ def test_idw_honours_an_explicit_n_neighbors():
     limited = s.interpolate_to_raster("z", method="idw", cell_size=10.0, n_neighbors=4)
     a, b = np.asarray(unlimited.read_array()), np.asarray(limited.read_array())
     assert not np.allclose(a, b)                                     # invdistnn(4), not invdist over all points
+
+
+def test_idw_without_n_neighbors_keeps_pyramids_own_default():
+    """An unspoken `n_neighbors` is not forwarded, so IDW stays `invdist` instead of becoming `invdistnn(32)`."""
+    from pyramids.feature import FeatureCollection
+
+    s = make_samples(40)
+    omitted = np.asarray(s.interpolate_to_raster("z", method="idw", cell_size=10.0).read_array())
+    pyramids_default = np.asarray(
+        FeatureCollection(s).interpolate_to_raster("z", method="idw", cell_size=10.0).read_array()
+    )
+    kriging_default = np.asarray(
+        s.interpolate_to_raster("z", method="idw", cell_size=10.0, n_neighbors=32).read_array()
+    )
+    np.testing.assert_allclose(omitted, pyramids_default)            # the base method's own call, unaltered
+    assert not np.allclose(omitted, kriging_default)                 # kriging's 32 must not leak into IDW
+
+
+def test_idw_accepts_an_explicit_none_as_all_points():
+    """`None` is a spoken value, not the unset sentinel: it reaches pyramids and means every point."""
+    s = make_samples(40)
+    omitted = np.asarray(s.interpolate_to_raster("z", method="idw", cell_size=10.0).read_array())
+    explicit = np.asarray(
+        s.interpolate_to_raster("z", method="idw", cell_size=10.0, n_neighbors=None).read_array()
+    )
+    np.testing.assert_allclose(omitted, explicit)
+
+
+def test_kriging_without_n_neighbors_uses_the_moving_neighborhood_default():
+    """The sentinel's kriging arm: saying nothing means 32 neighbours, recorded on the surface's provenance."""
+    s = make_samples(40)
+    surface = s.interpolate_to_raster("z", method="kriging", variogram=fitted_variogram(s), cell_size=20.0)
+    assert surface.n_neighbors == 32
+    assert surface.meta_data.get("GS_NEIGHBORS") == "32"
 
 
 def test_predict_grid_requires_cell_size_or_template():
