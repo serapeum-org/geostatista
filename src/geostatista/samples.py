@@ -94,7 +94,13 @@ class Samples(FeatureCollection):
         template=None,
         **idw_kwargs,
     ):
-        """Interpolate `column` onto a raster. `method="kriging"` is ordinary kriging; other methods delegate to pyramids' IDW."""
+        """Interpolate `column` onto a raster. `method="kriging"` is ordinary kriging; other methods delegate to pyramids' IDW.
+
+        The kriged surface takes its CRS from these samples, so a layer with no CRS yields an unreferenced
+        surface rather than one stamped WGS 84, and a projection the EPSG register does not name is carried
+        through as WKT. A `template` supplies the grid geometry and, when it names a CRS of its own, the CRS
+        too; a template without one contributes only its geometry.
+        """
         if method == "kriging":
             coords, values = self._clean("interpolate_to_raster", column)
             fitted = self._resolve_variogram(column, variogram)
@@ -119,7 +125,11 @@ class Samples(FeatureCollection):
         nodata: float = -9999.0,
         template=None,
     ):
-        """Convenience alias for `interpolate_to_raster(column, method="kriging", ...)`."""
+        """Convenience alias for `interpolate_to_raster(column, method="kriging", ...)`.
+
+        The surface inherits this layer's CRS unless `template` names one of its own; samples with no CRS
+        give an unreferenced surface.
+        """
         return self.interpolate_to_raster(
             column,
             method="kriging",

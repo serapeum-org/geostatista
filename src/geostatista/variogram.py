@@ -118,7 +118,8 @@ class Variogram:
         curve on the same axis. Requires the `viz` extra (cleopatra). Returns the matplotlib `(fig, ax)`.
 
         Raises:
-            ImportError: If cleopatra (the `viz` extra) is not installed.
+            ImportError: If cleopatra >=0.31.0 (the `viz` extra) is not installed — the glyph modules were
+                repackaged in that release, so an older cleopatra fails here too.
         """
         try:
             from cleopatra.glyphs.primitives.line_glyph import LineGlyph

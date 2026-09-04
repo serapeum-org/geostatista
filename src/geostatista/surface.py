@@ -88,12 +88,12 @@ class KrigedSurface(Dataset):
 
     @property
     def estimate(self) -> Dataset:
-        """The kriged estimate (band 0) as a single-band `Dataset`."""
+        """The kriged estimate (band 0) as a single-band `Dataset`, carrying the surface's georeference and nodata."""
         return self._band(0)
 
     @property
     def variance(self) -> Dataset:
-        """The kriging variance (band 1) as a single-band `Dataset` — the reason to prefer kriging over IDW."""
+        """The kriging variance (band 1) as a single-band `Dataset` on the same georeference — the reason to prefer kriging over IDW."""
         return self._band(1)
 
     def persist_metadata(self) -> None:
