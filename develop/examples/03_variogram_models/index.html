@@ -2110,7 +2110,7 @@ model</strong> with cross-validation. See the <a href="01_kriging_workflow.ipynb
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">cleopatra.line_glyph</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineGlyph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleopatra.glyphs.primitives.line_glyph</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineGlyph</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">geostatista</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"bounded (fittable) models :"</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">BOUNDED_MODELS</span><span class="p">))</span>
@@ -2118,7 +2118,7 @@ model</strong> with cross-validation. See the <a href="01_kriging_workflow.ipynb
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">%matplotlib inline
 import numpy as np
-from cleopatra.line_glyph import LineGlyph
+from cleopatra.glyphs.primitives.line_glyph import LineGlyph
 from geostatista import models
 
 print("bounded (fittable) models :", sorted(models.BOUNDED_MODELS))
@@ -2131,13 +2131,6 @@ print("all model functions       :", sorted(models.MODELS))</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026-07-20 17:54:38 | <span class="ansi-green-fg">INFO</span> | pyramids.base.config | Logging is configured.
-</pre>
-</div>
-</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
@@ -2234,7 +2227,7 @@ ax.legend()</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>&lt;matplotlib.legend.Legend at 0x7f163a24bcb0&gt;</pre>
+<pre>&lt;matplotlib.legend.Legend at 0x7f2bd44234d0&gt;</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -2432,7 +2425,7 @@ ax.legend()</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>&lt;matplotlib.legend.Legend at 0x7f1630e2d1d0&gt;</pre>
+<pre>&lt;matplotlib.legend.Legend at 0x7f2b57fc56d0&gt;</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
