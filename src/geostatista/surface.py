@@ -6,6 +6,7 @@ is stored as typed attributes and, on `persist_metadata`, as raster tags so a wr
 """
 
 import numpy as np
+from pyramids.base.crs import crs_spec
 from pyramids.dataset import Dataset, GeoReference
 
 
@@ -37,7 +38,7 @@ class KrigedSurface(Dataset):
         variance: np.ndarray,
         *,
         geo: tuple[float, float, float, float, float, float],
-        epsg: int | None,
+        epsg: int | str | None,
         nodata: float = -9999.0,
         model: str | None = None,
         nugget: float | None = None,
@@ -47,8 +48,10 @@ class KrigedSurface(Dataset):
     ) -> "KrigedSurface":
         """Build a `KrigedSurface` from estimate + variance arrays and a geotransform.
 
-        `epsg` of `None` leaves the surface without a CRS, matching what pyramids reports
-        for an ungeoreferenced template rather than defaulting to WGS 84.
+        `epsg` takes a code, a CRS specification string (WKT — what `crs_spec` returns for a
+        projection the EPSG register does not name), or `None` to leave the surface without a
+        CRS, matching what pyramids reports for an ungeoreferenced template rather than
+        defaulting to WGS 84.
         """
         stacked = np.stack([np.asarray(estimate, dtype=float), np.asarray(variance, dtype=float)])
         dataset = Dataset.from_array(
@@ -70,11 +73,15 @@ class KrigedSurface(Dataset):
         array = np.asarray(self.read_array())
         band = array[index] if array.ndim == 3 else array
         nodata = self.no_data_value[index] if self.no_data_value else -9999.0
-        # `self.epsg` is `None` for an ungeoreferenced surface; `GeoReference` carries that
-        # through as "no CRS" rather than stamping WGS 84 on it.
+        # `epsg` alone is `None` for two different rasters: one with no CRS, and one whose CRS
+        # simply carries no EPSG authority (geostationary, rotated pole, spherical-earth GRIB).
+        # `crs_spec` tells them apart, handing back the WKT for the second so the band keeps the
+        # projection instead of being written out unlocatable.
         dataset = Dataset.from_array(
             band,
-            geo_ref=GeoReference(geo=self.geotransform, epsg=self.epsg),
+            geo_ref=GeoReference(
+                geo=self.geotransform, epsg=crs_spec(self.epsg, self.crs)
+            ),
             no_data_value=nodata,
         )
         return dataset
