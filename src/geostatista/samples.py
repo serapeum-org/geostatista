@@ -178,7 +178,7 @@ class Samples(FeatureCollection):
         bounds: tuple[float, float, float, float] | None = None,
         n_neighbors: int = 32,
         nodata: float = -9999.0,
-        template=None,
+        template: "Dataset | None" = None,
     ):
         """Convenience alias for `interpolate_to_raster(column, method="kriging", ...)`.
 
