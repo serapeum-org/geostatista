@@ -301,9 +301,11 @@ def _polygon_exterior(geom) -> np.ndarray:
 def _class_choropleth(fc, codes: np.ndarray, title: str, vabs: float, ax):
     """Render a per-feature diverging choropleth of signed class `codes` via cleopatra's PolygonGlyph."""
     try:
-        from cleopatra.polygon_glyph import PolygonGlyph
-    except ImportError as exc:  # pragma: no cover
-        raise ImportError("plotting requires the 'viz' extra (cleopatra): install geostatista[viz]") from exc
+        from cleopatra.glyphs.primitives.polygon_glyph import PolygonGlyph
+    except ImportError as exc:
+        raise ImportError(
+            "plotting requires cleopatra >=0.31.0 (the 'viz' extra): install or upgrade geostatista[viz]"
+        ) from exc
     polygons = [_polygon_exterior(g) for g in fc.geometry.values]
     fig, ax, _ = PolygonGlyph(
         polygons, values=np.asarray(codes, dtype=float), ax=ax, cmap="coolwarm", vmin=-vabs, vmax=vabs

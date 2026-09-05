@@ -6,7 +6,9 @@ is stored as typed attributes and, on `persist_metadata`, as raster tags so a wr
 """
 
 import numpy as np
-from pyramids.dataset import Dataset
+from pyramids.dataset import Dataset, GeoReference
+
+from ._crs import crs_spec
 
 
 class KrigedSurface(Dataset):
@@ -37,7 +39,7 @@ class KrigedSurface(Dataset):
         variance: np.ndarray,
         *,
         geo: tuple[float, float, float, float, float, float],
-        epsg: int,
+        epsg: int | str | None,
         nodata: float = -9999.0,
         model: str | None = None,
         nugget: float | None = None,
@@ -45,9 +47,17 @@ class KrigedSurface(Dataset):
         range_: float | None = None,
         n_neighbors: int | None = None,
     ) -> "KrigedSurface":
-        """Build a `KrigedSurface` from estimate + variance arrays and a geotransform."""
+        """Build a `KrigedSurface` from estimate + variance arrays and a geotransform.
+
+        `epsg` takes a code, a CRS specification string (WKT — what `crs_spec` returns for a
+        projection the EPSG register does not name), or `None` to leave the surface without a
+        CRS, matching what pyramids reports for an ungeoreferenced template rather than
+        defaulting to WGS 84.
+        """
         stacked = np.stack([np.asarray(estimate, dtype=float), np.asarray(variance, dtype=float)])
-        dataset = Dataset.create_from_array(stacked, geo=geo, epsg=int(epsg), no_data_value=nodata)
+        dataset = Dataset.from_array(
+            stacked, geo_ref=GeoReference(geo=geo, epsg=epsg), no_data_value=nodata
+        )
         surface = cls(
             dataset.raster,
             model=model,
@@ -64,17 +74,27 @@ class KrigedSurface(Dataset):
         array = np.asarray(self.read_array())
         band = array[index] if array.ndim == 3 else array
         nodata = self.no_data_value[index] if self.no_data_value else -9999.0
-        dataset = Dataset.create_from_array(band, geo=self.geotransform, epsg=self.epsg, no_data_value=nodata)
+        # `epsg` alone is `None` for two different rasters: one with no CRS, and one whose CRS
+        # simply carries no EPSG authority (geostationary, rotated pole, spherical-earth GRIB).
+        # `crs_spec` tells them apart, handing back the WKT for the second so the band keeps the
+        # projection instead of being written out unlocatable.
+        dataset = Dataset.from_array(
+            band,
+            geo_ref=GeoReference(
+                geo=self.geotransform, epsg=crs_spec(self.epsg, self.crs)
+            ),
+            no_data_value=nodata,
+        )
         return dataset
 
     @property
     def estimate(self) -> Dataset:
-        """The kriged estimate (band 0) as a single-band `Dataset`."""
+        """The kriged estimate (band 0) as a single-band `Dataset`, carrying the surface's georeference and nodata."""
         return self._band(0)
 
     @property
     def variance(self) -> Dataset:
-        """The kriging variance (band 1) as a single-band `Dataset` — the reason to prefer kriging over IDW."""
+        """The kriging variance (band 1) as a single-band `Dataset` on the same georeference — the reason to prefer kriging over IDW."""
         return self._band(1)
 
     def persist_metadata(self) -> None:

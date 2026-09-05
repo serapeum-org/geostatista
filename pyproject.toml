@@ -32,7 +32,7 @@ dependencies = [
     "numpy >=2.0.0",
     "scipy >=1.10.0",
     "geopandas >=1.0.0",
-    "pyramids-gis >=0.46.0",
+    "pyramids-gis >=0.59.0",
     "loguru >=0.7.3",
 ]
 
@@ -40,9 +40,14 @@ dependencies = [
 # Variogram + surface plots via cleopatra (pyramids' viz extra). Plotting always
 # goes through cleopatra, never matplotlib directly. cleopatra is declared
 # explicitly because geostatista imports its glyphs directly (not just via pyramids).
-viz = ["pyramids-gis[viz] >=0.46.0", "cleopatra >=0.26.0"]
+# The floor is >=0.31.0 in all three places it appears (here, `dev`, `docs`) so there is
+# one number to keep in step. The direct glyph imports strictly need only >=0.30.0, where
+# the modules moved to `cleopatra.glyphs.*`; 0.31.0 is what pyramids' own `viz` extra
+# pins (`cleopatra[tiles]>=0.31.0`), so declaring it everywhere states what actually
+# gets installed rather than a lower bound the resolver can never pick.
+viz = ["pyramids-gis[viz] >=0.59.0", "cleopatra >=0.31.0"]
 # Tiled kriging over large grids via pyramids' lazy/out-of-core stack.
-distributed = ["pyramids-gis[lazy] >=0.46.0"]
+distributed = ["pyramids-gis[lazy] >=0.59.0"]
 all = ["geostatista[viz,distributed]"]
 
 [dependency-groups]
@@ -62,7 +67,7 @@ dev = [
     "mypy>=2.1.0",
     "pytest-mock>=3.15.1",
     "pytest-mpl>=0.17.0",
-    "cleopatra >=0.26.0",
+    "cleopatra >=0.31.0",
     # numerical-parity oracles for the `oracle`-marked tests (never imported by src/geostatista)
     "esda >=2.5",
     "libpysal >=4.9",
@@ -89,7 +94,7 @@ docs = [
     "jupyter",
     "nbconvert",
     "ipykernel",
-    "cleopatra >=0.26.0",
+    "cleopatra >=0.31.0",
 ]
 notebook = [
     "pip",

@@ -42,9 +42,11 @@ def test_queen_rook_cardinalities():
     queen = Weights.queen(fc)
     rook = Weights.rook(fc)
     assert queen.cardinalities.sum() == 144        # 4*3 + 12*5 + 9*8
-    assert queen.cardinalities.max() == 8 and queen.cardinalities.min() == 3
+    assert queen.cardinalities.max() == 8
+    assert queen.cardinalities.min() == 3
     assert rook.cardinalities.sum() == 80          # 4*2 + 12*3 + 9*4
-    assert rook.cardinalities.max() == 4 and rook.cardinalities.min() == 2
+    assert rook.cardinalities.max() == 4
+    assert rook.cardinalities.min() == 2
 
 
 def test_knn_and_row_standardize():
@@ -64,16 +66,19 @@ def test_knn_rejects_k_ge_n():
 def test_neighbors_property_and_inverse_distance_band():
     fc = lattice(4)
     w = Weights.queen(fc)
-    assert isinstance(w.neighbors, dict) and len(w.neighbors) == 16
+    assert isinstance(w.neighbors, dict)
+    assert len(w.neighbors) == 16
     inv = Weights.distance_band(fc, 1.5, binary=False)
-    assert (inv.sparse.data > 0).all() and (inv.sparse.data != 1.0).any()   # inverse-distance weights, not binary
+    assert (inv.sparse.data > 0).all()
+    assert (inv.sparse.data != 1.0).any()                # inverse-distance weights, not binary
 
 
 def test_facade_string_weight_specs():
     fc = lattice(4)
     for spec in ("queen", "rook", "knn", "distance_band"):
         summary = spatial_autocorrelation(fc, "v", weights=spec)
-        assert summary["weights"] == "b" and summary["n"] == 16
+        assert summary["weights"] == "b"
+        assert summary["n"] == 16
 
 
 def test_local_morans_island_is_ns():
@@ -82,7 +87,8 @@ def test_local_morans_island_is_ns():
     polys = [box(0, 0, 1, 1), box(1, 0, 2, 1), box(50, 50, 51, 51)]   # two adjacent + one far island
     fc = FeatureCollection(gpd.GeoDataFrame({"v": [1.0, 2.0, 3.0]}, geometry=polys, crs="EPSG:32633"))
     out = local_morans(fc, "v", Weights.queen(fc), permutations=49, seed=0)
-    assert out["cluster"].iloc[2] == "ns" and np.isnan(out["p_sim"].iloc[2])   # island: no neighbors
+    assert out["cluster"].iloc[2] == "ns"                    # island: no neighbors
+    assert np.isnan(out["p_sim"].iloc[2])
 
 
 def test_distance_band_symmetric_and_islands():
@@ -165,7 +171,8 @@ def test_getis_ord_gi_statistic_matches_definition():
     # Gi = sum_{j in N(i)} x_j / (total - x_i): A={B}=2/5, B={A,C}=4/4, C={B}=2/3
     np.testing.assert_allclose(non_star["gi"].to_numpy(), [2 / 5, 4 / 4, 2 / 3], rtol=1e-9)
     # feature B is adjacent to every other feature -> degenerate Gi denominator -> z is nan (both branches)
-    assert np.isnan(star["z"].to_numpy()[1]) and np.isnan(non_star["z"].to_numpy()[1])
+    assert np.isnan(star["z"].to_numpy()[1])
+    assert np.isnan(non_star["z"].to_numpy()[1])
     # the finite features (A, C) standardize differently between star and non-star
     finite = [0, 2]
     assert not np.allclose(star["z"].to_numpy()[finite], non_star["z"].to_numpy()[finite])
@@ -181,9 +188,11 @@ def test_constant_field_is_guarded():
     assert np.isnan(morans_i(fc, "c", w, permutations=49, seed=0).I)
     assert np.isnan(gearys_c(fc, "c", w, permutations=49, seed=0).C)
     lisa = local_morans(fc, "c", w, permutations=49, seed=0)
-    assert np.all(np.isnan(lisa["local_i"].to_numpy())) and (lisa["cluster"] == "ns").all()
+    assert np.all(np.isnan(lisa["local_i"].to_numpy()))
+    assert (lisa["cluster"] == "ns").all()
     gi = getis_ord_gi(fc, "c", w)
-    assert np.all(np.isnan(gi["z"].to_numpy())) and (gi["hotspot"] == "ns").all()   # constant -> undefined (nan)
+    assert np.all(np.isnan(gi["z"].to_numpy()))              # constant -> undefined (nan)
+    assert (gi["hotspot"] == "ns").all()
 
 
 # --- facade (S5) ---------------------------------------------------------------
@@ -197,3 +206,14 @@ def test_facade_functions():
     hot = hotspots(fc, "block", weights="queen")
     assert isinstance(hot, FeatureCollection)
     assert "hotspot" in hot.columns
+
+
+def test_facade_accepts_a_prebuilt_weights_instance():
+    """The `Weights | str` facade argument takes a ready-made `Weights`, not only a named default."""
+    fc = lattice(5)
+    summary = spatial_autocorrelation(fc, "v", weights=Weights.knn(fc, 4))
+    assert summary["n"] == 25
+    assert summary["weights"] == "b"
+    built = spatial_autocorrelation(fc, "v", weights=Weights.queen(fc))
+    assert built == spatial_autocorrelation(fc, "v", weights="queen")   # same matrix, passed either way
+    assert "hotspot" in hotspots(fc, "block", weights=Weights.queen(fc)).columns

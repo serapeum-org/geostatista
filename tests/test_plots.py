@@ -2,6 +2,7 @@
 
 import pathlib
 import re
+import sys
 
 import numpy as np
 import geopandas as gpd
@@ -33,7 +34,8 @@ def test_variogram_plot_via_cleopatra():
     samples = _samples()
     vg = samples.variogram("z", n_lags=12)
     fig, ax = vg.plot()                                   # empirical scatter only
-    assert fig is not None and ax is not None
+    assert fig is not None
+    assert ax is not None
     vg.fit("spherical")
     _, ax2 = vg.plot()                                    # scatter + fitted model curve
     assert len(ax2.get_lines()) >= 1                      # the model curve is a Line2D
@@ -59,8 +61,29 @@ def test_lisa_and_hotspot_maps_via_cleopatra():
     w = Weights.queen(tracts)
     lisa = local_morans(tracts, "v", w, permutations=99, seed=0)
     fig1, ax1 = plot_lisa(lisa)
-    assert fig1 is not None and len(ax1.collections) >= 1     # the polygon collection was drawn
+    assert fig1 is not None
+    assert len(ax1.collections) >= 1                      # the polygon collection was drawn
 
     hot = getis_ord_gi(tracts, "v", w, star=True)
     fig2, ax2 = plot_hotspots(hot)
-    assert fig2 is not None and len(ax2.collections) >= 1
+    assert fig2 is not None
+    assert len(ax2.collections) >= 1
+
+
+def test_import_errors_name_the_cleopatra_version(monkeypatch):
+    """An installed-but-too-old cleopatra hits the same handler, so the message must say `upgrade`, not just `install`."""
+    from geostatista.autocorrelation import _class_choropleth
+    from geostatista.variogram import Variogram
+
+    # Blocking the glyph modules (leaving `cleopatra` itself importable) is exactly the shape of a
+    # pre-0.30.0 cleopatra, where the package imports fine and only the submodules are missing.
+    for module in ("cleopatra.glyphs.primitives.scatter_glyph", "cleopatra.glyphs.primitives.line_glyph",
+                   "cleopatra.glyphs.primitives.polygon_glyph"):
+        monkeypatch.setitem(sys.modules, module, None)
+
+    vg = _samples().variogram("z", n_lags=12)
+    fc, codes = _samples(), np.zeros(60)
+    with pytest.raises(ImportError, match=r"cleopatra >=0\.31\.0.*install or upgrade"):
+        vg.plot()
+    with pytest.raises(ImportError, match=r"cleopatra >=0\.31\.0.*install or upgrade"):
+        _class_choropleth(fc, codes, "t", 1.0, None)

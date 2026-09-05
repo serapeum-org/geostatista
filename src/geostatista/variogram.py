@@ -118,14 +118,18 @@ class Variogram:
         curve on the same axis. Requires the `viz` extra (cleopatra). Returns the matplotlib `(fig, ax)`.
 
         Raises:
-            ImportError: If cleopatra (the `viz` extra) is not installed.
+            ImportError: If cleopatra is missing or older than the declared `viz` floor. The glyph
+                modules moved under `cleopatra.glyphs.*` in 0.30.0, so a cleopatra that imports fine
+                still fails here; the manifest asks for >=0.31.0, which is what pyramids' own `viz`
+                extra pins.
         """
         try:
-            from cleopatra.line_glyph import LineGlyph
-            from cleopatra.scatter_glyph import ScatterGlyph
-        except ImportError as exc:  # pragma: no cover
+            from cleopatra.glyphs.primitives.line_glyph import LineGlyph
+            from cleopatra.glyphs.primitives.scatter_glyph import ScatterGlyph
+        except ImportError as exc:
             raise ImportError(
-                "Variogram.plot requires the 'viz' extra (cleopatra): install geostatista[viz]"
+                "Variogram.plot requires cleopatra >=0.31.0 (the 'viz' extra): "
+                "install or upgrade geostatista[viz]"
             ) from exc
         valid = np.isfinite(self.semivariance)
         fig, ax, _ = ScatterGlyph(self.lags[valid], self.semivariance[valid], ax=ax).plot(

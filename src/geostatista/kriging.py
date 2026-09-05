@@ -4,12 +4,18 @@ Loops target cells through the moving neighborhood (`_solve/neighborhood.py`) an
 (`_solve/system.py`). Coincident sample points are pre-averaged (the documented duplicate policy).
 """
 
+from typing import TYPE_CHECKING
+
 import numpy as np
 from scipy.spatial.distance import cdist, pdist, squareform
 
+from ._crs import crs_spec
 from ._solve.neighborhood import Neighborhood
 from ._solve.system import solve_ordinary
 from .surface import KrigedSurface
+
+if TYPE_CHECKING:
+    from pyramids.dataset import Dataset
 
 
 def average_duplicates(coords: np.ndarray, values: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -73,19 +79,37 @@ class OrdinaryKriging:
         *,
         cell_size: float | None = None,
         bounds: tuple[float, float, float, float] | None = None,
-        template=None,
-        epsg: int = 4326,
+        template: "Dataset | None" = None,
+        epsg: int | str | None = None,
         nodata: float = -9999.0,
     ) -> KrigedSurface:
-        """Krige onto a regular grid (from `cell_size` + `bounds`, or an existing `template` Dataset)."""
+        """Krige onto a regular grid (from `cell_size` + `bounds`, or an existing `template` Dataset).
+
+        The output CRS is resolved by falling back, never by overwriting: the `template`'s own
+        CRS wins when it has one, otherwise `epsg` is kept — which is how `Samples.krige` passes
+        the point layer's CRS through for a template that carries none. `epsg` accepts a code, a
+        CRS specification string (WKT), or `None`. Nothing is invented: an engine built from bare
+        coordinate arrays has been told nothing about the CRS, so saying nothing yields an
+        unreferenced surface rather than one stamped WGS 84 — the same rule `Samples._epsg`
+        follows one frame up.
+        """
         if template is not None:
             geo = template.geotransform
-            shape = np.asarray(template.read_array()).shape
-            nrows, ncols = shape[-2], shape[-1]
+            # `rows`/`columns` come from the raster header; `read_array()` would pull every pixel
+            # into memory purely to look at `.shape`, which defeats the point of a large template.
+            nrows, ncols = template.rows, template.columns
             minx, cell_x, top_y, cell_y = geo[0], geo[1], geo[3], -geo[5]
             xs = minx + (np.arange(ncols) + 0.5) * cell_x
             ys = top_y - (np.arange(nrows) + 0.5) * cell_y
-            epsg = int(template.epsg)
+            # `template.epsg` alone is `None` both for a template with no CRS and for one
+            # whose CRS carries no EPSG authority (pyramids >=0.47 stopped substituting
+            # EPSG:4326 for either); `crs_spec` tells them apart, returning the WKT for the
+            # second. Only override `epsg` when the template actually names a CRS — otherwise
+            # the caller's argument stands, so a CRS-less template borrows the grid geometry
+            # without discarding the CRS the samples brought.
+            template_crs = crs_spec(template.epsg, template.crs)
+            if template_crs is not None:
+                epsg = template_crs
         else:
             if cell_size is None:
                 raise ValueError("predict_grid: provide cell_size (or a template Dataset)")
