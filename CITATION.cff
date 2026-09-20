@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "geostatista"
+abstract: "Geostatistics for the serapeum stack: variograms, kriging, and spatial autocorrelation"
+authors:
+  - family-names: Farrag
+    given-names: Mostafa
+    email: moah.farag@gmail.com
+version: "0.3.0"
+date-released: 2026-09-05
+license: GPL-3.0
+repository-code: "https://github.com/serapeum-org/geostatista"
+url: "https://serapeum-org.github.io/docs/python-packages/statistics/geostatista/"
+keywords:
+  - "geostatistics"
+  - "kriging"
+  - "variogram"
+  - "spatial"
+  - "GIS"
